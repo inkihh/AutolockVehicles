@@ -1,7 +1,7 @@
 class FOGAutolockVehicles_Settings
 {
-	float bury_time = 600.0;
-	ref array<FOGCrateConfiguration> crates;
+	bool DoDebug = false;
+	int AutolockDelay = 5;
 
 	[NonSerialized()]
 	private bool m_IsLoaded;
@@ -30,5 +30,17 @@ class FOGAutolockVehicles_Settings
 	bool IsLoaded()
 	{
 		return this.m_IsLoaded;
+	}
+
+	// ------------------------------------------------------
+
+	int GetAutolockDelay()
+	{
+		return AutolockDelay;
+	}
+
+	bool GetDoDebug()
+	{
+		return DoDebug;
 	}
 }

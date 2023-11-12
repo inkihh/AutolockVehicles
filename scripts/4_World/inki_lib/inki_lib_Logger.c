@@ -23,4 +23,12 @@ class FOGAutolockVehicles_Logger
             Print("[" + m_AppName + "] Could not create logfile " + m_LogFile);
         }
     }
+
+    void DebugLog(string message)
+    {
+        if(!FOGAutolockVehicles_App.GetInstance().m_Settings.GetDoDebug())
+            return;
+
+        Log(message);
+    }
 }

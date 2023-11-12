@@ -9,7 +9,7 @@ class CfgPatches
 		{
 			"DZ_Data",
 			"DZ_Scripts",
-			"MuchCarKeys"
+			"MuchCarKey"
 		};
 	};   
 };
