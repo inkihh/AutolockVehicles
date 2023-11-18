@@ -16,7 +16,6 @@ modded class CarScript
             m_App.m_Logger.DebugLog("Starting Autolock timer");
             StartAutolockTimer();
 		}
-
     }
 
     void StartAutolockTimer()
@@ -25,48 +24,64 @@ modded class CarScript
         GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.DoAutolock, AutolockDelay, false);
     }
 
-    void DoAutolock()
+    void DoAutolock(PlayerBase Driver = NULL)
     {
         GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(this.DoAutolock);
         m_App.m_Logger.DebugLog("Starting DoAutolock");
 
-        if(IsAnyCrewPresent())
+        int PassengerCount = 0;
+        if(Driver) PassengerCount = -1
+        for (int index = 0; index < CrewSize(); ++index)
+		{
+			if (CrewMember(index) != null) PassengerCount++;
+		}
+
+        m_App.m_Logger.DebugLog("Passenger count: " + PassengerCount);
+
+        if(PassengerCount > 0)
         {
-            m_App.m_Logger.DebugLog("Crew present, exiting");
+            m_App.m_Logger.DebugLog("Passengers present, exiting");
             return;
         }
 
-        m_IsCKLocked = true;
+        if(!m_HasCKAssigned)
+        {
+            m_App.m_Logger.DebugLog("No carkey assigned, exiting");
+            return;
+        }
 
+        m_App.m_Logger.Log("Locking vehicle (carId:" + m_CarScriptId + "|keyId:" + m_CarKeyId + ")");
+
+        m_IsCKLocked = true;
         SynchronizeValues();
+    }
+
+    void RemoveAutolockTimer(string Reason)
+    {
+        if (!GetGame().IsServer()) return;
+		
+        GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(this.DoAutolock);
+        m_App.m_Logger.DebugLog("Remove autolock timer (" + Reason + ")");
     }
 
     override void OnEngineStart()
 	{
 		super.OnEngineStart();
-
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(this.DoAutolock);
+		RemoveAutolockTimer("OnEngineStart");
 	}
 
     
     override void EEKilled(Object killer)
 	{
-		if (GetGame().IsServer())
-		{
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(this.DoAutolock);
-            m_App.m_Logger.DebugLog("Deleting autolock timer (EEKilled)");
-		}
-
+		RemoveAutolockTimer("EEKilled");
 		super.EEKilled(killer);
 	}
 
 	override void EEDelete(EntityAI parent)
 	{
+        RemoveAutolockTimer("EEDelete");
 		super.EEDelete(parent);
-        
-		if (!GetGame().IsServer()) return;
-
-        m_App.m_Logger.DebugLog("Deleting autolock timer (EEDelete)");
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(this.DoAutolock);
 	}
 }
+
+
