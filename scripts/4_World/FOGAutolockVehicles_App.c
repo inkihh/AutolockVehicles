@@ -46,10 +46,13 @@ class FOGAutolockVehicles_App
 	    
 	string m_TimerTargetFunctionName = "LockVehicle";
 
+	ref map<int, ref Timer> m_Timers;
+
 	void FOGAutolockVehicles_App()
 	{
 		m_Logger = new FOGAutolockVehicles_Logger(m_AppName);
 		m_Settings = new FOGAutolockVehicles_Settings(m_AppName);
+		m_Timers = new map<int, ref Timer>;
 
 		s_Instance = this;
 
@@ -69,7 +72,6 @@ class FOGAutolockVehicles_App
 		if (!s_Instance) new FOGAutolockVehicles_App();
 		return s_Instance;
 	}
-
 
 	// unused, leaving for reference
 	int GetPassengerCount(CarScript car)
@@ -131,19 +133,23 @@ class FOGAutolockVehicles_App
             }
         }
 
-        RemoveAutolockTimer("Cleanup possibly existing timers on starting a new timer");
+        //RemoveAutolockTimer("Cleanup possibly existing timers on starting a new timer");
         m_Logger.DebugLog("Starting autolock timer, mode:" + typename.EnumToString(FOGAutolockVehicles_TimerMode, mode) + ", vehicle:" + car.m_LoggingTools_CarLock_VehicleId + ", minutes:" + AutolockDelay);
 
         Param1<CarScript> carParam = new Param1<CarScript>(car);
-        GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, m_TimerTargetFunctionName, (AutolockDelay * 60 * 1000), false, carParam);
+        //GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, m_TimerTargetFunctionName, (AutolockDelay * 60 * 1000), false, carParam);
+		Timer timer = new Timer();
+		timer.Run(AutolockDelay * 60, this, m_TimerTargetFunctionName, carParam, false);
+		m_Timers.Set(car.m_LoggingTools_CarLock_VehicleId, timer);
     }
 
-	void RemoveAutolockTimer(string Reason)
+	void RemoveAutolockTimer(CarScript car, string Reason)
     {
-        if (!GetGame().IsServer()) return;
+        if(!GetGame().IsServer()) return;
+		if(!car) return;
 
-        m_Logger.DebugLog("Removing autolock timer (" + Reason + ")");
-        GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).RemoveByName(this, m_TimerTargetFunctionName);
+        m_Logger.DebugLog("Removing autolock timer, vehicle:" + car.m_LoggingTools_CarLock_VehicleId + " (" + Reason + ")");
+        m_Timers.Remove(car.m_LoggingTools_CarLock_VehicleId);
     }
 
 	void OnPlayerDisconnect(PlayerBase player)

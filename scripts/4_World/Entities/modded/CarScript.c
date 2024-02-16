@@ -40,13 +40,13 @@ modded class CarScript
 		super.OnEngineStart();
 
         if(!m_App) m_App = FOGAutolockVehicles_App.GetInstance();
-		m_App.RemoveAutolockTimer("OnEngineStart");
+		m_App.RemoveAutolockTimer(this, "OnEngineStart");
 	}
 
     override void EEKilled(Object killer)
 	{
         if(!m_App) m_App = FOGAutolockVehicles_App.GetInstance();
-		m_App.RemoveAutolockTimer("EEKilled");
+		m_App.RemoveAutolockTimer(this, "EEKilled");
 
 		super.EEKilled(killer);
 	}
@@ -54,7 +54,7 @@ modded class CarScript
 	override void EEDelete(EntityAI parent)
 	{
         if(!m_App) m_App = FOGAutolockVehicles_App.GetInstance();
-        m_App.RemoveAutolockTimer("EEDelete");
+        m_App.RemoveAutolockTimer(this, "EEDelete");
 
 		super.EEDelete(parent);
 	}
