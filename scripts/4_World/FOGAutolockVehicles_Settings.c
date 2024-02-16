@@ -1,8 +1,10 @@
 class FOGAutolockVehicles_Settings
 {
-	bool DoDebug = false;
-	int AutolockDelay = 5;
-
+	bool DoDebug = true;
+	int AutolockDelay_Startup = 5;
+	int AutolockDelay_PlayerDisconnect = 5;
+	int AutolockDelay_EngineStop = 5;
+	
 	[NonSerialized()]
 	private bool m_IsLoaded;
 
@@ -20,6 +22,7 @@ class FOGAutolockVehicles_Settings
 		if (FileExist(FOGConfigFile))
 		{
 			JsonFileLoader<FOGAutolockVehicles_Settings>.JsonLoadFile(FOGConfigFile, this);
+			JsonFileLoader<FOGAutolockVehicles_Settings>.JsonSaveFile(FOGConfigFile, this);
 			return true;
 		}
 
@@ -33,11 +36,6 @@ class FOGAutolockVehicles_Settings
 	}
 
 	// ------------------------------------------------------
-
-	int GetAutolockDelay()
-	{
-		return AutolockDelay;
-	}
 
 	bool GetDoDebug()
 	{

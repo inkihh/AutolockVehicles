@@ -9,9 +9,19 @@ class CfgPatches
 		{
 			"DZ_Data",
 			"DZ_Scripts",
-			"MuchCarKey"
+			"CarLock_Script"
 		};
 	};   
+};
+
+class CfgAddons
+{
+	class PreloadAddons {
+		class MuchCarKey
+		{
+			list[] = {"MuchCarKey"};
+		};
+	};
 };
 
 class CfgMods
@@ -38,12 +48,21 @@ class CfgMods
 
 		class defs
 		{
+			class gameLibScriptModule
+			{
+				value = "";
+				files[] = {
+					"CarLock/scripts/Common",
+				};
+			};
+
 			class worldScriptModule
 			{
 				value="";
 				files[] =
 				{
-					"FOG\FOGAutolockVehicles\scripts\4_World"
+					"CarLock/scripts/Common",
+					"FOG/FOGAutolockVehicles/scripts/4_World"
 				};
 			};
 
@@ -52,7 +71,8 @@ class CfgMods
 				value="";
 				files[] =
 				{
-					"FOG\FOGAutolockVehicles\scripts\5_Mission"
+					"CarLock/scripts/Common",
+					"FOG/FOGAutolockVehicles/scripts/5_Mission"
 				};
 			};
 		};

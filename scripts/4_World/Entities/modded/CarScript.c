@@ -1,87 +1,65 @@
+#ifdef LoggingTools_Server_Vehicles
+#ifndef CARLOCKDISABLE
+#ifdef CarLock
+
 modded class CarScript
 {
     ref FOGAutolockVehicles_App m_App;
-    bool m_AutolockDone = false;
 
-    override void DelayedInit()
+    /* override bool OnStoreLoad(ParamsReadContext ctx, int version)
     {
-        super.DelayedInit();
+        if ( !super.OnStoreLoad(ctx, version))
+            return false;
+        
+        if(!m_App) m_App = FOGAutolockVehicles_App.GetInstance();
+        m_App.StartAutolockTimer(this, FOGAutolockVehicles_TimerMode.STARTUP);
 
-        if (!GetGame().IsServer())
-			return;
-			
-		if(!m_AutolockDone)
-		{
-            m_App = FOGAutolockVehicles_App.GetInstance();
-            m_App.m_Logger.DebugLog("Starting Autolock timer");
-            StartAutolockTimer();
-		}
-    }
+        return true;
+    } */
 
-    void StartAutolockTimer()
+    override void DeferredInit()
     {
-        int AutolockDelay = m_App.m_Settings.GetAutolockDelay() * 60 * 1000;
-        GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.DoAutolock, AutolockDelay, false);
+        super.DeferredInit();
+        
+        if(!m_App) m_App = FOGAutolockVehicles_App.GetInstance();
+        m_App.m_Logger.DebugLog("Initializing vehicle " + m_LoggingTools_CarLock_VehicleId);
+
+        m_App.StartAutolockTimer(this, FOGAutolockVehicles_TimerMode.STARTUP);
     }
+    
+    override void OnEngineStop()
+	{
+		super.OnEngineStop();
 
-    void DoAutolock(PlayerBase Driver = NULL)
-    {
-        GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(this.DoAutolock);
-        m_App.m_Logger.DebugLog("Starting DoAutolock");
-
-        int PassengerCount = 0;
-        if(Driver) PassengerCount = -1
-        for (int index = 0; index < CrewSize(); ++index)
-		{
-			if (CrewMember(index) != null) PassengerCount++;
-		}
-
-        m_App.m_Logger.DebugLog("Passenger count: " + PassengerCount);
-
-        if(PassengerCount > 0)
-        {
-            m_App.m_Logger.DebugLog("Passengers present, exiting");
-            return;
-        }
-
-        if(!m_HasCKAssigned)
-        {
-            m_App.m_Logger.DebugLog("No carkey assigned, exiting");
-            return;
-        }
-
-        m_App.m_Logger.Log("Locking vehicle (carId:" + m_CarScriptId + "|keyId:" + m_CarKeyId + ")");
-
-        m_IsCKLocked = true;
-        SynchronizeValues();
-    }
-
-    void RemoveAutolockTimer(string Reason)
-    {
-        if (!GetGame().IsServer()) return;
-		
-        GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(this.DoAutolock);
-        m_App.m_Logger.DebugLog("Remove autolock timer (" + Reason + ")");
-    }
+        if(!m_App) m_App = FOGAutolockVehicles_App.GetInstance();
+		m_App.StartAutolockTimer(this, FOGAutolockVehicles_TimerMode.ENGINESTOP);
+	}
 
     override void OnEngineStart()
 	{
 		super.OnEngineStart();
-		RemoveAutolockTimer("OnEngineStart");
+
+        if(!m_App) m_App = FOGAutolockVehicles_App.GetInstance();
+		m_App.RemoveAutolockTimer("OnEngineStart");
 	}
 
-    
     override void EEKilled(Object killer)
 	{
-		RemoveAutolockTimer("EEKilled");
+        if(!m_App) m_App = FOGAutolockVehicles_App.GetInstance();
+		m_App.RemoveAutolockTimer("EEKilled");
+
 		super.EEKilled(killer);
 	}
 
 	override void EEDelete(EntityAI parent)
 	{
-        RemoveAutolockTimer("EEDelete");
+        if(!m_App) m_App = FOGAutolockVehicles_App.GetInstance();
+        m_App.RemoveAutolockTimer("EEDelete");
+
 		super.EEDelete(parent);
 	}
 }
 
-
+#endif
+#endif
+#endif
