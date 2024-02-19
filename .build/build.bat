@@ -1,7 +1,7 @@
  @echo off
 setlocal
 
-set version=0.0.3
+set version=0.0.4
 set modbase=P:\FOG\
 set modpath=
 set modname=FOGAutolockVehicles

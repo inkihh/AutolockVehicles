@@ -6,17 +6,6 @@ modded class CarScript
 {
     ref FOGAutolockVehicles_App m_App;
 
-    /* override bool OnStoreLoad(ParamsReadContext ctx, int version)
-    {
-        if ( !super.OnStoreLoad(ctx, version))
-            return false;
-        
-        if(!m_App) m_App = FOGAutolockVehicles_App.GetInstance();
-        m_App.StartAutolockTimer(this, FOGAutolockVehicles_TimerMode.STARTUP);
-
-        return true;
-    } */
-
     override void DeferredInit()
     {
         super.DeferredInit();

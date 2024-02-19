@@ -28,7 +28,6 @@
 
 */
 
-
 enum FOGAutolockVehicles_TimerMode
 {
 	STARTUP = 0 
@@ -193,6 +192,25 @@ class FOGAutolockVehicles_App
         StartAutolockTimer(car, FOGAutolockVehicles_TimerMode.PLAYERDISCONNECT);
 	}
 
+	void CloseAllDoors(CarScript car)
+	{
+		if(!car) return;
+
+		string doorsAnimSources[6] = {
+			"DoorsDriver",
+			"DoorsCoDriver",
+			"DoorsCargo1",
+			"DoorsCargo2",
+			"DoorsHood",
+			"DoorsTrunk"
+		};
+
+		foreach(string animSource : doorsAnimSources)
+		{
+			car.SetAnimationPhase(animSource, 0.0);
+		}
+	}
+
 	void LockVehicle(CarScript car)
 	{
 		m_Logger.DebugLog("Starting LockVehicle");
@@ -202,6 +220,8 @@ class FOGAutolockVehicles_App
             m_Logger.DebugLog("No car, exiting");
             return;
         }
+
+		CloseAllDoors(car);
 
 		if(car.m_CarLockPassword == -1)
         {
@@ -216,6 +236,8 @@ class FOGAutolockVehicles_App
         }
 
 		m_Logger.Log("Locking vehicle:" + car.m_LoggingTools_CarLock_VehicleId);
-        car.SetCarLock(true);
+
+		car.SetSoundToPlay(1);
+		car.SetCarLock(true);
 	}
 }
