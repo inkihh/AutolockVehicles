@@ -1,3 +1,6 @@
+#ifdef LoggingTools_Server_Vehicles
+#ifndef CARLOCKDISABLE
+#ifdef CarLock
 modded class MissionServer extends MissionBase
 {
     protected ref FOGAutolockVehicles_App m_FOGAutolockVehicles_App;
@@ -10,3 +13,6 @@ modded class MissionServer extends MissionBase
 		FOGAutolockVehicles_App m_FOGAutolockVehicles_App = FOGAutolockVehicles_App.GetInstance(); 
     }
 }
+#endif
+#endif
+#endif

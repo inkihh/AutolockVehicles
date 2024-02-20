@@ -1,9 +1,12 @@
+#ifdef LoggingTools_Server_Vehicles
+#ifndef CARLOCKDISABLE
+#ifdef CarLock
 class FOGAutolockVehicles_Settings
 {
 	bool DoDebug = true;
 	int AutolockDelay_Startup = 5;
 	int AutolockDelay_PlayerDisconnect = 5;
-	int AutolockDelay_EngineStop = 5;
+	int ProximityLock_DistanceMeters = 10;
 	
 	[NonSerialized()]
 	private bool m_IsLoaded;
@@ -35,10 +38,11 @@ class FOGAutolockVehicles_Settings
 		return this.m_IsLoaded;
 	}
 
-	// ------------------------------------------------------
-
 	bool GetDoDebug()
 	{
 		return DoDebug;
 	}
 }
+#endif
+#endif
+#endif

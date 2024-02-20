@@ -1,3 +1,6 @@
+#ifdef LoggingTools_Server_Vehicles
+#ifndef CARLOCKDISABLE
+#ifdef CarLock
 class FOGAutolockVehicles_Logger
 {
     string m_LogFile;
@@ -32,3 +35,6 @@ class FOGAutolockVehicles_Logger
         Log(message);
     }
 }
+#endif
+#endif
+#endif

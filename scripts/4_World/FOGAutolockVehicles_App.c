@@ -7,11 +7,12 @@
 - On vehicle spawn (restart, receipt thrown, parked out, ..)
 -- Goto StartTimer with settings.AutolockDelay_Startup
 
-- Vehicle engine stop
--- Goto StartTimer with settings.AutolockDelay_EngineStop
+- Vehicle deleted or destroyed
+-- Stop timer
 
 - Vehicle engine start, vehicle deleted or destroyed
--- Stop timer
+-- Start measuring distance between player and car
+-- If distance > ProximityLock_DistanceMeters, goto LockVehicle
 
 - StartTimer
 -- Vehicle has no lock? EXIT
@@ -27,6 +28,10 @@
 -- LOCK!
 
 */
+
+#ifdef LoggingTools_Server_Vehicles
+#ifndef CARLOCKDISABLE
+#ifdef CarLock
 
 enum FOGAutolockVehicles_TimerMode
 {
@@ -113,11 +118,6 @@ class FOGAutolockVehicles_App
             case FOGAutolockVehicles_TimerMode.STARTUP:
             {
                 AutolockDelay = m_Settings.AutolockDelay_Startup;
-                break;
-            }
-            case FOGAutolockVehicles_TimerMode.ENGINESTOP:
-            {
-                AutolockDelay = m_Settings.AutolockDelay_EngineStop;
                 break;
             }
 			case FOGAutolockVehicles_TimerMode.PLAYERDISCONNECT:
@@ -241,3 +241,7 @@ class FOGAutolockVehicles_App
 		car.SetCarLock(true);
 	}
 }
+
+#endif
+#endif
+#endif

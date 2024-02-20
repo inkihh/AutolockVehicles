@@ -16,17 +16,11 @@ modded class CarScript
         m_App.StartAutolockTimer(this, FOGAutolockVehicles_TimerMode.STARTUP);
     }
     
-    override void OnEngineStop()
-	{
-		super.OnEngineStop();
-
-        if(!m_App) m_App = FOGAutolockVehicles_App.GetInstance();
-		m_App.StartAutolockTimer(this, FOGAutolockVehicles_TimerMode.ENGINESTOP);
-	}
-
     override void OnEngineStart()
 	{
 		super.OnEngineStart();
+
+        if(!GetGame().IsServer()) return;
 
         if(!m_App) m_App = FOGAutolockVehicles_App.GetInstance();
 		m_App.RemoveAutolockTimer(this, "OnEngineStart");

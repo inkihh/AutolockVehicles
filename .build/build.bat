@@ -1,7 +1,7 @@
  @echo off
 setlocal
 
-set version=0.0.4
+set version=0.0.6
 set modbase=P:\FOG\
 set modpath=
 set modname=FOGAutolockVehicles
@@ -27,7 +27,7 @@ for /f "tokens=*" %%i in ('node .\modpath.js "%modlist%"') do set fullmodlist=%%
 
 ::goto :end
 
-set fullmodlist=%fullmodlist%;P:\mods\local\@LBmaster;P:\mods\local\@LoggingTools
+set fullmodlist=%fullmodlist%;P:\mods\local\@LBmaster;P:\mods\local\@FOGAutolockVehicles
 
 ::goto :nokill
 
@@ -99,7 +99,7 @@ cls
 
 del /f /s "P:\mods\serverside\Addons\%modname%_*.pbo"
 
-start /B "MakePbo" "%makepbopath%" "%srcpath%" "P:\mods\serverside\Addons\%modname%_%version%.pbo"
+start /B "MakePbo" "%makepbopath%" "%srcpath%" "P:\mods\local\@FOGAutolockVehicles\Addons\%modname%_%version%.pbo"
 ::start /B "MakePbo" "%makepbopath%" "-X=*-U*.git,*.vscode,*.delete" "%srcpath%" "P:\mods\local\@FINKSmartphone\Addons\%modname%_%version%.pbo"
 ::start /B "PboProject" "%pboprojectpath%" "-S" "+$" "+J" "-W" "+N" "-C" "-K" "%srcpath%" "-M=P:\mods\local\@FINKSmartphone"
 ::start /B "MakePbo" "%makepbopath%" "-W" "-X=*-U*.git,*.vscode,*.delete" "%srcpath%" "P:\mods\local\@FINKSmartphone\Addons\%modname%_%version%.pbo"
@@ -119,13 +119,13 @@ TASKKILL /IM PboProject.exe /F /T
 
 ::goto :eof
 
-goto :skipsign
+::goto :skipsign
 :: CREATE SIGNED FILE
 echo -------------------------------------------------------
 echo .
 echo SIGNING
 :: @CHANGEME
-start /B  "" "%signtoolpath%" "%keypath%.biprivatekey" "P:\mods\local\@FINKSmartphone\Addons\%modname%_%version%.pbo"
+start /B  "" "%signtoolpath%" "%keypath%.biprivatekey" "P:\mods\local\@FOGAutolockVehicles\Addons\%modname%_%version%.pbo"
 TIMEOUT 1
 :skipsign
 
