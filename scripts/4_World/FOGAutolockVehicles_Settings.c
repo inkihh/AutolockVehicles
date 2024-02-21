@@ -4,6 +4,7 @@
 class FOGAutolockVehicles_Settings
 {
 	bool DoDebug = true;
+	int UseKeyMod = 0;
 	int AutolockDelay_Startup = 5;
 	int AutolockDelay_PlayerDisconnect = 5;
 	int ProximityLock_DistanceMeters = 10;
