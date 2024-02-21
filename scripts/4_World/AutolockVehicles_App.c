@@ -29,13 +29,6 @@
 
 */
 
-enum AutolockVehicles_TimerMode
-{
-	STARTUP = 0 
-	ENGINESTOP = 1
-	PLAYERDISCONNECT = 3
-}
-
 class AutolockVehicles_App
 {
 	protected static ref AutolockVehicles_App s_Instance;
@@ -68,6 +61,12 @@ class AutolockVehicles_App
 		#ifdef MuchCarKey
 			AddKeyMod("MUCHCARKEY", new AutolockVehicles_MuchCarKey());
 		#endif
+
+		#ifdef Trader
+			AddKeyMod("TRADER", new AutolockVehicles_Trader());
+		#endif
+
+		AddKeyMod("CUSTOM", new AutolockVehicles_Custom());
 
 		s_Instance = this;
 
@@ -126,7 +125,7 @@ class AutolockVehicles_App
 		AutolockVehicles_KeyModBase keyMod = GetKeyMod();
 		if(!keyMod)
         {
-            m_Logger.DebugLog("UseKeyMod is set to " + m_Settings.UseKeyMod + " (" + EnumTools.EnumToString(AutolockVehicles_KeyMod, m_Settings.UseKeyMod) + ") but the required mod doesn't seemto be installed");
+            m_Logger.DebugLog("UseKeyMod is set to " + m_Settings.UseKeyMod + " (" + EnumTools.EnumToString(AutolockVehicles_KeyMod, m_Settings.UseKeyMod) + ") but the required mod doesn't seem to be installed");
             return;
         }
 
@@ -233,8 +232,6 @@ class AutolockVehicles_App
             return;
         }
 
-		CloseAllDoors(car);
-
 		if(keyMod.GetVehicleState(car) == AutolockVehicles_State.UNASSIGNED)
         {
             m_Logger.DebugLog("Car doesn't even have a lock, not locking");
@@ -249,6 +246,8 @@ class AutolockVehicles_App
 
 		m_Logger.Log("Locking vehicle");
 
+		car.EngineStop();
+		CloseAllDoors(car);
 		keyMod.LockVehicle(car);
 	}
 }

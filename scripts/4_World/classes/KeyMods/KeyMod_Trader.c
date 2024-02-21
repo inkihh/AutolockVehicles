@@ -1,7 +1,7 @@
-#ifdef MuchCarKey
-class AutolockVehicles_MuchCarKey : AutolockVehicles_KeyModBase
+#ifdef Trader
+class AutolockVehicles_Trader : AutolockVehicles_KeyModBase
 {
-    override string GetName() { return "MUCHCARKEY"; }
+    override string GetName() { return "TRADER"; }
     
     override AutolockVehicles_State GetVehicleState(Transport vehicle)
     {
@@ -9,8 +9,8 @@ class AutolockVehicles_MuchCarKey : AutolockVehicles_KeyModBase
         car = CarScript.Cast(vehicle);
         if(!car) return AutolockVehicles_State.ERROR;
 
-        if(!car.m_HasCKAssigned) return AutolockVehicles_State.UNASSIGNED;
-        if(car.m_IsCKLocked) return AutolockVehicles_State.LOCKED;
+        if(!car.m_Trader_HasKey) return AutolockVehicles_State.UNASSIGNED;
+        if(car.m_Trader_Locked) return AutolockVehicles_State.LOCKED;
         return AutolockVehicles_State.UNLOCKED;
     }
 
@@ -20,10 +20,8 @@ class AutolockVehicles_MuchCarKey : AutolockVehicles_KeyModBase
         car = CarScript.Cast(vehicle);
         if(!car) return;
 
-        car.m_IsCKLocked = true;
+        car.m_Trader_Locked = true;
         car.SynchronizeValues();
-        car.ResetLifetime();
-			
     }
 }
 #endif

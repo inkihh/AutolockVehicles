@@ -1,5 +1,3 @@
-#ifndef CARLOCKDISABLE
-#ifdef CarLock
 modded class MissionGameplay
 {
 	override void OnUpdate(float timeslice)
@@ -27,5 +25,3 @@ modded class MissionGameplay
 
 	}
 }
-#endif
-#endif
