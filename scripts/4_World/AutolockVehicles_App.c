@@ -66,6 +66,10 @@ class AutolockVehicles_App
 			AddKeyMod("TRADER", new AutolockVehicles_Trader());
 		#endif
 
+		#ifdef EXPANSIONMODVEHICLE
+			AddKeyMod("EXPANSION", new AutolockVehicles_Expansion());
+		#endif
+
 		AddKeyMod("CUSTOM", new AutolockVehicles_Custom());
 
 		s_Instance = this;
