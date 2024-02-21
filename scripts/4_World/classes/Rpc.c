@@ -1,4 +1,4 @@
-enum FOGAutolockVehicles_RPC
+enum AutolockVehicles_RPC
 {
   START_PROXIMITY = 787274732,
   LOCK_PROXIMITY

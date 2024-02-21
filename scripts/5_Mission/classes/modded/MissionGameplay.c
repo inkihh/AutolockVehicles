@@ -9,19 +9,19 @@ modded class MissionGameplay
         PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
 
         if(!player) return;
-        if(!player.m_FOGAutolockVehicles_CurrentUnlockedVehicle) return;
+        if(!player.m_AutolockVehicles_CurrentUnlockedVehicle) return;
 
         vector playerPosition = player.GetPosition();
-        vector vehiclePosition = player.m_FOGAutolockVehicles_CurrentUnlockedVehicle.GetPosition();
+        vector vehiclePosition = player.m_AutolockVehicles_CurrentUnlockedVehicle.GetPosition();
 
 		float distance = vector.Distance(playerPosition, vehiclePosition);
 
         if(distance > 20)
         {
-            Print("[FOGAutolockVehicles.MissionGameplay] distance:" + distance);
-            player.m_FOGAutolockVehicles_CurrentUnlockedVehicle = null;
+            Print("[AutolockVehicles.MissionGameplay] distance:" + distance);
+            player.m_AutolockVehicles_CurrentUnlockedVehicle = null;
            
-            player.RPCSingleParam(FOGAutolockVehicles_RPC.LOCK_PROXIMITY, null, true);
+            player.RPCSingleParam(AutolockVehicles_RPC.LOCK_PROXIMITY, null, true);
         }
 		super.OnUpdate(timeslice);
 

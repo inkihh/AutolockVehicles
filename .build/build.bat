@@ -1,15 +1,16 @@
  @echo off
 setlocal
 
-set version=0.0.6
-set modbase=P:\FOG\
+set version=0.0.1
+set modbase=P:\inkihh\
 set modpath=
-set modname=FOGAutolockVehicles
+set modname=AutolockVehicles
 set serverip=192.168.178.96
 set serverport=2302
 set password=inkihh
 set playername=inkihh
-set modlist=@BaseBuildingPlus;@RaG_Hunting_Cabin;@TraderPlus;@VPPAdminTools;@Dabs Framework;@CF
+::set modlist=@BaseBuildingPlus;@RaG_Hunting_Cabin;@TraderPlus;@VPPAdminTools;@Dabs Framework;@CF
+set modlist=@TraderPlus;@VPPAdminTools;@Dabs Framework;@CF
 set srcpath=%modbase%%modpath%%modname%
 set dayzclientpath=C:\Program Files (x86)\Steam\steamapps\common\DayZ
 set dayzserverpath=C:\Program Files (x86)\Steam\steamapps\common\DayZServer
@@ -27,7 +28,7 @@ for /f "tokens=*" %%i in ('node .\modpath.js "%modlist%"') do set fullmodlist=%%
 
 ::goto :end
 
-set fullmodlist=%fullmodlist%;P:\mods\local\@LBmaster;P:\mods\local\@FOGAutolockVehicles
+set fullmodlist=%fullmodlist%;P:\mods\local\@LBmaster;P:\mods\local\@AutolockVehicles
 
 ::goto :nokill
 
@@ -99,7 +100,7 @@ cls
 
 del /f /s "P:\mods\serverside\Addons\%modname%_*.pbo"
 
-start /B "MakePbo" "%makepbopath%" "%srcpath%" "P:\mods\local\@FOGAutolockVehicles\Addons\%modname%_%version%.pbo"
+start /B "MakePbo" "%makepbopath%" "%srcpath%" "P:\mods\local\@AutolockVehicles\Addons\%modname%_%version%.pbo"
 ::start /B "MakePbo" "%makepbopath%" "-X=*-U*.git,*.vscode,*.delete" "%srcpath%" "P:\mods\local\@FINKSmartphone\Addons\%modname%_%version%.pbo"
 ::start /B "PboProject" "%pboprojectpath%" "-S" "+$" "+J" "-W" "+N" "-C" "-K" "%srcpath%" "-M=P:\mods\local\@FINKSmartphone"
 ::start /B "MakePbo" "%makepbopath%" "-W" "-X=*-U*.git,*.vscode,*.delete" "%srcpath%" "P:\mods\local\@FINKSmartphone\Addons\%modname%_%version%.pbo"
@@ -125,7 +126,7 @@ echo -------------------------------------------------------
 echo .
 echo SIGNING
 :: @CHANGEME
-start /B  "" "%signtoolpath%" "%keypath%.biprivatekey" "P:\mods\local\@FOGAutolockVehicles\Addons\%modname%_%version%.pbo"
+start /B  "" "%signtoolpath%" "%keypath%.biprivatekey" "P:\mods\local\@AutolockVehicles\Addons\%modname%_%version%.pbo"
 TIMEOUT 1
 :skipsign
 

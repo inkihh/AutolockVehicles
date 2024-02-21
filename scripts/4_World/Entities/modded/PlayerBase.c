@@ -1,26 +1,24 @@
-#ifndef CARLOCKDISABLE
-#ifdef CarLock
 modded class PlayerBase extends ManBase
 {
-    #ifdef LoggingTools_Server_Vehicles
-        ref FOGAutolockVehicles_App m_FOGAutolockVehicles_App = FOGAutolockVehicles_App.GetInstance();
+    #ifdef SERVER
+        ref AutolockVehicles_App m_AutolockVehicles_App = AutolockVehicles_App.GetInstance();
     #endif
 
-    CarScript m_FOGAutolockVehicles_CurrentUnlockedVehicle;
-    int m_FOGAutolockVehicles_ProximityLock_DistanceMeters;
+    CarScript m_AutolockVehicles_CurrentUnlockedVehicle;
+    int m_AutolockVehicles_ProximityLock_DistanceMeters;
 
-    #ifdef LoggingTools_Server_Vehicles
+    #ifdef SERVER
         override void OnDisconnect()
         {
             if (!GetGame().IsServer()) return;
-            if(!m_FOGAutolockVehicles_App) m_FOGAutolockVehicles_App = FOGAutolockVehicles_App.GetInstance();
+            if(!m_AutolockVehicles_App) m_AutolockVehicles_App = AutolockVehicles_App.GetInstance();
 
-            m_FOGAutolockVehicles_App.OnPlayerDisconnect(this);
+            m_AutolockVehicles_App.OnPlayerDisconnect(this);
             super.OnDisconnect();
         }
     #endif
 
-    string m_FOGAutolockVehicles_GetNetworkId(Object object)
+    string m_AutolockVehicles_GetNetworkId(Object object)
     {
         if(!object) return "";
 
@@ -39,7 +37,7 @@ modded class PlayerBase extends ManBase
 
         switch (rpc_type)
         {
-            case FOGAutolockVehicles_RPC.START_PROXIMITY:
+            case AutolockVehicles_RPC.START_PROXIMITY:
             {
                 if(!GetGame().IsClient()) return;
 
@@ -47,10 +45,10 @@ modded class PlayerBase extends ManBase
                 if (!ctx.Read(carParam)) return;
 
                 string persistentId = carParam.param1;
-                m_FOGAutolockVehicles_ProximityLock_DistanceMeters = carParam.param2;
+                m_AutolockVehicles_ProximityLock_DistanceMeters = carParam.param2;
                 
-                Print("[FOGAutolockVehicles] persistentId from rpc: " + persistentId);
-                Print("[FOGAutolockVehicles] m_FOGAutolockVehicles_ProximityLock_DistanceMeters: " + m_FOGAutolockVehicles_ProximityLock_DistanceMeters);
+                Print("[AutolockVehicles] persistentId from rpc: " + persistentId);
+                Print("[AutolockVehicles] m_AutolockVehicles_ProximityLock_DistanceMeters: " + m_AutolockVehicles_ProximityLock_DistanceMeters);
 
                 array<Object> objects_around = new array<Object>;
                 GetGame().GetObjectsAtPosition(GetPosition(), 10, objects_around, NULL);
@@ -59,12 +57,12 @@ modded class PlayerBase extends ManBase
                 {
                     if(!banana.IsInherited(CarScript)) continue;
 
-                    Print("[FOGAutolockVehicles] m_FOGAutolockVehicles_GetNetworkId(banana) " + m_FOGAutolockVehicles_GetNetworkId(banana));
+                    Print("[AutolockVehicles] m_AutolockVehicles_GetNetworkId(banana) " + m_AutolockVehicles_GetNetworkId(banana));
 
-                    if(m_FOGAutolockVehicles_GetNetworkId(banana) == persistentId)
+                    if(m_AutolockVehicles_GetNetworkId(banana) == persistentId)
                     {
-                        Print("[FOGAutolockVehicles] setting m_FOGAutolockVehicles_CurrentUnlockedVehicle");
-                        m_FOGAutolockVehicles_CurrentUnlockedVehicle = CarScript.Cast(banana);
+                        Print("[AutolockVehicles] setting m_AutolockVehicles_CurrentUnlockedVehicle");
+                        m_AutolockVehicles_CurrentUnlockedVehicle = CarScript.Cast(banana);
                         break;
                     }
                 }
@@ -72,18 +70,18 @@ modded class PlayerBase extends ManBase
                 break;
             }
 
-            #ifdef LoggingTools_Server_Vehicles
-            case FOGAutolockVehicles_RPC.LOCK_PROXIMITY:
+            #ifdef SERVER
+            case AutolockVehicles_RPC.LOCK_PROXIMITY:
             {
                 if(!GetGame().IsServer()) return;
 
-                FOGAutolockVehicles_App.GetInstance().m_Logger.Log("[FOGAutolockVehicles] FOGAutolockVehicles_RPC.LOCK_PROXIMITY");
+                AutolockVehicles_App.GetInstance().m_Logger.Log("[AutolockVehicles] AutolockVehicles_RPC.LOCK_PROXIMITY");
 
                 PlayerBase player = PlayerBase.Cast(sender.GetPlayer());
                 if(!player) return;
-                if(!player.m_FOGAutolockVehicles_CurrentUnlockedVehicle) return;
+                if(!player.m_AutolockVehicles_CurrentUnlockedVehicle) return;
 
-                FOGAutolockVehicles_App.GetInstance().LockVehicle(player.m_FOGAutolockVehicles_CurrentUnlockedVehicle);
+                AutolockVehicles_App.GetInstance().LockVehicle(player.m_AutolockVehicles_CurrentUnlockedVehicle);
 
                 break;
             }
@@ -91,5 +89,3 @@ modded class PlayerBase extends ManBase
         }
     }
 }
-#endif
-#endif

@@ -1,12 +1,9 @@
-#ifdef LoggingTools_Server_Vehicles
-#ifndef CARLOCKDISABLE
-#ifdef CarLock
-class FOGAutolockVehicles_Logger
+class AutolockVehicles_Logger
 {
     string m_LogFile;
     string m_AppName;
 
-    void FOGAutolockVehicles_Logger(string AppName) {
+    void AutolockVehicles_Logger(string AppName) {
         m_LogFile = "$profile:" + AppName + ".log";
         m_AppName = AppName;
     }
@@ -17,7 +14,7 @@ class FOGAutolockVehicles_Logger
 
         if (file)
         {
-            string timestamp = FOGAutolockVehicles_Helper.GetTimestamp();
+            string timestamp = AutolockVehicles_Helper.GetTimestamp();
             FPrintln(file, "[" + timestamp + "] " + message.Trim());
             CloseFile(file);
         }
@@ -29,12 +26,9 @@ class FOGAutolockVehicles_Logger
 
     void DebugLog(string message)
     {
-        if(!FOGAutolockVehicles_App.GetInstance().m_Settings.GetDoDebug())
+        if(!AutolockVehicles_App.GetInstance().m_Settings.GetDoDebug())
             return;
 
         Log(message);
     }
 }
-#endif
-#endif
-#endif

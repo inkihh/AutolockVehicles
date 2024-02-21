@@ -1,4 +1,4 @@
-class FOGAutolockVehicles_Helper
+class AutolockVehicles_Helper
 {
     static string EscapeString(string StringToEscape)
     {

@@ -1,19 +1,13 @@
-#ifdef LoggingTools_Server_Vehicles
-#ifndef CARLOCKDISABLE
-#ifdef CarLock
-
 modded class CarScript
 {
-    ref FOGAutolockVehicles_App m_App;
+    ref AutolockVehicles_App m_AutolockVehicles_App;
 
     override void DeferredInit()
     {
         super.DeferredInit();
         
-        if(!m_App) m_App = FOGAutolockVehicles_App.GetInstance();
-        m_App.m_Logger.DebugLog("Initializing vehicle " + m_LoggingTools_CarLock_VehicleId);
-
-        m_App.StartAutolockTimer(this, FOGAutolockVehicles_TimerMode.STARTUP);
+        if(!m_AutolockVehicles_App) m_AutolockVehicles_App = AutolockVehicles_App.GetInstance();
+        m_AutolockVehicles_App.StartAutolockTimer(this, AutolockVehicles_TimerMode.STARTUP);
     }
     
     override void OnEngineStart()
@@ -22,27 +16,23 @@ modded class CarScript
 
         if(!GetGame().IsServer()) return;
 
-        if(!m_App) m_App = FOGAutolockVehicles_App.GetInstance();
-		m_App.RemoveAutolockTimer(this, "OnEngineStart");
+        if(!m_AutolockVehicles_App) m_AutolockVehicles_App = AutolockVehicles_App.GetInstance();
+		m_AutolockVehicles_App.RemoveAutolockTimer(this, "OnEngineStart");
 	}
 
     override void EEKilled(Object killer)
 	{
-        if(!m_App) m_App = FOGAutolockVehicles_App.GetInstance();
-		m_App.RemoveAutolockTimer(this, "EEKilled");
+        if(!m_AutolockVehicles_App) m_AutolockVehicles_App = AutolockVehicles_App.GetInstance();
+		m_AutolockVehicles_App.RemoveAutolockTimer(this, "EEKilled");
 
 		super.EEKilled(killer);
 	}
 
 	override void EEDelete(EntityAI parent)
 	{
-        if(!m_App) m_App = FOGAutolockVehicles_App.GetInstance();
-        m_App.RemoveAutolockTimer(this, "EEDelete");
+        if(!m_AutolockVehicles_App) m_AutolockVehicles_App = AutolockVehicles_App.GetInstance();
+        m_AutolockVehicles_App.RemoveAutolockTimer(this, "EEDelete");
 
 		super.EEDelete(parent);
 	}
 }
-
-#endif
-#endif
-#endif

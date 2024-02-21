@@ -1,6 +1,6 @@
 class CfgPatches
 {
-	class FOGAutolockVehicles
+	class AutolockVehicles
 	{
 		units[] = {};
 		weapons[] = {};
@@ -8,32 +8,21 @@ class CfgPatches
 		requiredAddons[] =
 		{
 			"DZ_Data",
-			"DZ_Scripts",
-			"CarLock_Script"
+			"DZ_Scripts"
 		};
 	};   
 };
 
-class CfgAddons
-{
-	class PreloadAddons {
-		class MuchCarKey
-		{
-			list[] = {"MuchCarKey"};
-		};
-	};
-};
-
 class CfgMods
 {
-	class FOGAutolockVehicles
+	class AutolockVehicles
 	{
-		dir = "FOG";
+		dir = "inkihh";
 		picture = "";
 		action = "";
 		hideName = 0;
 		hidePicture = 0;
-		name = "FOGAutolockVehicles";
+		name = "AutolockVehicles";
 		credits = "";
 		author = "inkihh";
 		authorID = "0";
@@ -48,21 +37,12 @@ class CfgMods
 
 		class defs
 		{
-			class gameLibScriptModule
-			{
-				value = "";
-				files[] = {
-					"CarLock/scripts/Common",
-				};
-			};
-
 			class worldScriptModule
 			{
 				value="";
 				files[] =
 				{
-					"CarLock/scripts/Common",
-					"FOG/FOGAutolockVehicles/scripts/4_World"
+					"inkihh/AutolockVehicles/scripts/4_World"
 				};
 			};
 
@@ -71,8 +51,7 @@ class CfgMods
 				value="";
 				files[] =
 				{
-					"CarLock/scripts/Common",
-					"FOG/FOGAutolockVehicles/scripts/5_Mission"
+					"inkihh/AutolockVehicles/scripts/5_Mission"
 				};
 			};
 		};
