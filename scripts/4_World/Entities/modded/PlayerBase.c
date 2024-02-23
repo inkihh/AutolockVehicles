@@ -53,16 +53,16 @@ modded class PlayerBase extends ManBase
                 array<Object> objects_around = new array<Object>;
                 GetGame().GetObjectsAtPosition(GetPosition(), 10, objects_around, NULL);
 
-                foreach(Object banana : objects_around)
+                foreach(Object object_around : objects_around)
                 {
-                    if(!banana.IsInherited(CarScript)) continue;
+                    if(!object_around.IsInherited(CarScript)) continue;
 
-                    Print("[AutolockVehicles] m_AutolockVehicles_GetNetworkId(banana) " + m_AutolockVehicles_GetNetworkId(banana));
+                    Print("[AutolockVehicles] m_AutolockVehicles_GetNetworkId(object_around) " + AutolockVehicles_Helper.GetNetworkID(object_around));
 
-                    if(m_AutolockVehicles_GetNetworkId(banana) == persistentId)
+                    if(m_AutolockVehicles_GetNetworkId(object_around) == persistentId)
                     {
                         Print("[AutolockVehicles] setting m_AutolockVehicles_CurrentUnlockedVehicle");
-                        m_AutolockVehicles_CurrentUnlockedVehicle = CarScript.Cast(banana);
+                        m_AutolockVehicles_CurrentUnlockedVehicle = CarScript.Cast(object_around);
                         break;
                     }
                 }

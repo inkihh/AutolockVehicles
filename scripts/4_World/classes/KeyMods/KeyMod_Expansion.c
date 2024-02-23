@@ -21,7 +21,7 @@ class AutolockVehicles_Expansion : AutolockVehicles_KeyModBase
         if(!car) return;
 
         ExpansionCarAdminKey adminkey;
-        car.UnlockCar(adminkey);
+        car.LockCar(adminkey);
     }
 }
 #endif

@@ -2,10 +2,14 @@ modded class CarScript
 {
     ref AutolockVehicles_App m_AutolockVehicles_App;
 
+    bool m_AutolockVehicles_WasProximityLocked;
+
     override void DeferredInit()
     {
         super.DeferredInit();
         
+        if(!GetGame().IsServer()) return;
+
         if(!m_AutolockVehicles_App) m_AutolockVehicles_App = AutolockVehicles_App.GetInstance();
         m_AutolockVehicles_App.StartAutolockTimer(this, AutolockVehicles_TimerMode.STARTUP);
     }
@@ -22,6 +26,8 @@ modded class CarScript
 
     override void EEKilled(Object killer)
 	{
+        if(!GetGame().IsServer()) return;
+
         if(!m_AutolockVehicles_App) m_AutolockVehicles_App = AutolockVehicles_App.GetInstance();
 		m_AutolockVehicles_App.RemoveAutolockTimer(this, "EEKilled");
 
@@ -30,6 +36,8 @@ modded class CarScript
 
 	override void EEDelete(EntityAI parent)
 	{
+        if(!GetGame().IsServer()) return;
+
         if(!m_AutolockVehicles_App) m_AutolockVehicles_App = AutolockVehicles_App.GetInstance();
         m_AutolockVehicles_App.RemoveAutolockTimer(this, "EEDelete");
 

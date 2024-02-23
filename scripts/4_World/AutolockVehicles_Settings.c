@@ -1,16 +1,23 @@
 class AutolockVehicles_Settings
 {
-	bool DoDebug = true;
+	int debug_log_level = 1;
 	int UseKeyMod = 0;
-	int AutolockDelay_Startup = 5;
-	int AutolockDelay_PlayerDisconnect = 5;
-	int ProximityLock_DistanceMeters = 10;
+	int enableStartupAutolock = 0;
+	int enableDisconnectAutolock = 0;
+	int enableProximityAutolock = 0;
+	int enableCloseDoors = 0;
+	int enableEngineOff = 0;
+	int AutolockDelay_Startup = 2;
+	int AutolockDelay_PlayerDisconnect = 1;
+	int ProximityLock_DistanceMeters = 5;
 	
 	[NonSerialized()]
 	private bool m_IsLoaded;
 
 	void AutolockVehicles_Settings(string AppName)
 	{
+		if(!GetGame().IsServer()) return;
+
 		string ConfigPath = "$profile:AutolockVehicles";
 		MakeDirectory(ConfigPath);
 
@@ -20,6 +27,8 @@ class AutolockVehicles_Settings
 
 	bool Load(string inkihhConfigFile)
 	{
+		if(!GetGame().IsServer()) return false;
+
 		if (FileExist(inkihhConfigFile))
 		{
 			JsonFileLoader<AutolockVehicles_Settings>.JsonLoadFile(inkihhConfigFile, this);
@@ -34,10 +43,5 @@ class AutolockVehicles_Settings
 	bool IsLoaded()
 	{
 		return this.m_IsLoaded;
-	}
-
-	bool GetDoDebug()
-	{
-		return DoDebug;
 	}
 }

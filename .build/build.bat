@@ -10,7 +10,8 @@ set serverport=2302
 set password=inkihh
 set playername=inkihh
 ::set modlist=@BaseBuildingPlus;@RaG_Hunting_Cabin;@TraderPlus;@VPPAdminTools;@Dabs Framework;@CF
-set modlist=@Trader;@VPPAdminTools;@Dabs Framework;@CF
+set modlist=@DayZ-Expansion-Bundle;@DayZ-Expansion-Core;@DayZ-Expansion-Licensed;@VPPAdminTools;@Dabs Framework;@CF
+::set modlist=@MuchCarKey;@VPPAdminTools;@Dabs Framework;@CF
 set srcpath=%modbase%%modpath%%modname%
 set dayzclientpath=C:\Program Files (x86)\Steam\steamapps\common\DayZ
 set dayzserverpath=C:\Program Files (x86)\Steam\steamapps\common\DayZServer
@@ -41,6 +42,11 @@ TASKKILL /IM DayZDiag_x64.exe /F /T
 TIMEOUT 3
 
 :nokill
+
+goto :nowipe
+rmdir /s /q "%dayzserverpath%\mpmissions\dayzOffline.chernarusplus\storage_1"
+rmdir /s /q "%dayzserverpath%\mpmissions\dayzOffline.chernarusplus\expansion"
+:nowipe
 
 call :GetUnixTime unixtime
 

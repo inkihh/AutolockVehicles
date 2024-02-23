@@ -1,15 +1,18 @@
 class AutolockVehicles_Logger
 {
-    string m_LogFile;
     string m_AppName;
+    string m_LogFile;
 
-    void AutolockVehicles_Logger(string AppName) {
+    void AutolockVehicles_Logger(string AppName)
+    {
         m_LogFile = "$profile:" + AppName + ".log";
         m_AppName = AppName;
     }
 
-    void Log(string message)
+    void Log(string message, AutolockVehicles_LogLevel MyLogLevel = AutolockVehicles_LogLevel.DEBUG)
     {
+        if(AutolockVehicles_App.GetInstance().m_Settings.debug_log_level < MyLogLevel) return;
+
         FileHandle file = OpenFile(m_LogFile, FileMode.APPEND);
 
         if (file)
@@ -22,13 +25,5 @@ class AutolockVehicles_Logger
         {
             Print("[" + m_AppName + "] Could not create logfile " + m_LogFile);
         }
-    }
-
-    void DebugLog(string message)
-    {
-        if(!AutolockVehicles_App.GetInstance().m_Settings.GetDoDebug())
-            return;
-
-        Log(message);
     }
 }
