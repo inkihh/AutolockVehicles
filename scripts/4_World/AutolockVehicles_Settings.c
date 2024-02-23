@@ -6,6 +6,7 @@ class AutolockVehicles_Settings
 	int enableDisconnectAutolock = 0;
 	int enableProximityAutolock = 0;
 	int enableCloseDoors = 0;
+	int lockOnlyWhenAllDoorsAreClosed = 1;
 	int enableEngineOff = 0;
 	int AutolockDelay_Startup = 2;
 	int AutolockDelay_PlayerDisconnect = 1;

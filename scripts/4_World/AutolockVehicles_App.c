@@ -195,23 +195,51 @@ class AutolockVehicles_App
         StartAutolockTimer(player.m_AutolockVehicles_CurrentUnlockedVehicle, AutolockVehicles_TimerMode.PLAYERDISCONNECT);
 	}
 
+	array<string> GetDoorAnimSources(CarScript car)
+	{
+		if(!car) return null;
+
+		array<Selection> selections = new array<Selection>();
+		array<string> doorAnimSources = new array<string>();
+
+		LOD lod = car.GetLODByName(LOD.NAME_GEOMETRY);
+		lod.GetSelections(selections);
+
+		foreach(Selection selection : selections)
+		{
+			if(selection.GetName().Substring(0, 6) != "doors_") continue;
+			string animSource = car.GetAnimSourceFromSelection(selection.GetName());
+			if(animSource == "") continue;
+			doorAnimSources.Insert(animSource);
+		}
+
+		return doorAnimSources;
+	}
+
 	void CloseAllDoors(CarScript car)
 	{
 		if(!car) return;
+		
+		array<string> doorAnimSources = GetDoorAnimSources(car);
 
-		string doorsAnimSources[6] = {
-			"DoorsDriver",
-			"DoorsCoDriver",
-			"DoorsCargo1",
-			"DoorsCargo2",
-			"DoorsHood",
-			"DoorsTrunk"
-		};
-
-		foreach(string animSource : doorsAnimSources)
+		foreach(string animSource : doorAnimSources)
 		{
 			car.SetAnimationPhase(animSource, 0.0);
 		}
+	}
+
+	bool AreAllDoorsClosed(CarScript car)
+	{
+		if(!car) return false;
+
+		array<string> doorAnimSources = GetDoorAnimSources(car);
+
+		foreach(string animSource : doorAnimSources)
+		{
+			if(car.GetAnimationPhase(animSource) > 0.0) return false;
+		}
+
+		return true;
 	}
 
 	void LockVehicle(CarScript car)
@@ -227,7 +255,7 @@ class AutolockVehicles_App
 		AutolockVehicles_KeyModBase keyMod = GetKeyMod();
 		if(!keyMod)
         {
-            m_Logger.Log("UseKeyMod is set to " + m_Settings.UseKeyMod + " (" + EnumTools.EnumToString(AutolockVehicles_KeyMod, m_Settings.UseKeyMod) + ") but the required mod doesn't seemto be installed");
+            m_Logger.Log("UseKeyMod is set to " + m_Settings.UseKeyMod + " (" + EnumTools.EnumToString(AutolockVehicles_KeyMod, m_Settings.UseKeyMod) + ") but the required mod doesn't seemto be installed, not locking");
             return;
         }
 
@@ -239,9 +267,15 @@ class AutolockVehicles_App
 
         if(keyMod.GetVehicleState(car) == AutolockVehicles_State.LOCKED)
         {
-            m_Logger.Log("Car already locked, not locking, exiting");
+            m_Logger.Log("Car already locked, not locking");
             return;
         }
+
+		if(m_Settings.lockOnlyWhenAllDoorsAreClosed && !AreAllDoorsClosed(car))
+		{
+			m_Logger.Log("lockOnlyWhenAllDoorsAreClosed set, but not all doors are closed, not locking");
+			return;
+		}
 
 		m_Logger.Log("Locking vehicle");
 
