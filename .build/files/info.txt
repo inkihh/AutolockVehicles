@@ -122,3 +122,13 @@ Thanks to my "family" at FOG FamilyOfGamers, without their support I wouldn't ha
 Special thanks to the [url=https://discord.gg/enfusionmodders]Enfusion Modders Discord[/url] - without the constant help from these guys, I would have gone nowhere. Special thanks to Wardog, Tree, The Crimson Zamboni, Varyel, ◣▲▼▲, TrueDolphin, aff3nbart, Dmitri, LieutenantMaster and Helkhiana.
 
 Extra special thanks to [i]AVcrazy21[/i] for designing this awesome steam workshop page icon, despite my constant whining for changes <3
+
+[h2]Legalese[/h2]
+
+[list]
+    [*]The mod may NOT be repacked, aka used in a mod pack or server pack. Don't ask.
+    [*]The mod may be used on monetized servers, as long as Bohemia's monetization guidelines are followed
+    [*]The mod may only be uploaded to the Steam Workshop under my account name (inkihh)
+[/list]
+
+Copyright 2024 inkihh
