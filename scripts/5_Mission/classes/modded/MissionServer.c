@@ -6,7 +6,8 @@ modded class MissionServer extends MissionBase
     {
         super.OnInit();
 
-        Print("[" + AutolockVehicles_App.m_AppName + "] MissionServer.OnInit();");
+        Print("[AutolockVehicles] MissionServer.OnInit();");
+        Print("[AutolockVehicles] If you're happy, please donate to https://paypal.me/ingmarheinrich <3");
 		AutolockVehicles_App m_AutolockVehicles_App = AutolockVehicles_App.GetInstance(); 
     }
 }
