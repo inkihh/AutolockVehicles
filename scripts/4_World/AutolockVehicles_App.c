@@ -1,30 +1,42 @@
 /*
-- On player disconnect
--- Player not in a vehicle? EXIT
--- Player not driver of that vehicle? EXIT
--- Goto StartTimer with settings.autolock_delay_player_disconnect_minutes
+- On vehicle unlock:
+-- enable_proximity_autolock not set? EXIT
+-- Save vehicle in player.LastUnlockedVehicle
+-- Save player in vehicle.LastPlayerUnlocked
+-- GOTO ProximityProcess
 
-- On vehicle spawn (restart, receipt thrown, parked out, ..)
--- Goto StartTimer with settings.autolock_delay_startup_minutes
+- ProximityProcess (on the client):
+-- Continuously measure the distance between the player and the vehicle
+-- If the player leaves the proximity defined by proximity_lock_distance_meters:
+--- Player doesn't have a LastUnlockedVehicle? EXIT
+--- LastUnlockedVehicle was last unlocked by a different player? EXIT
+--- GOTO LockVehicle
 
-- Vehicle deleted or destroyed
--- Stop timer
+- On player disconnect:
+-- enable_disconnect_autolock_timer not set? EXIT
+-- Player doesn't have a LastUnlockedVehicle? EXIT
+-- LastUnlockedVehicle was last unlocked by a different player? EXIT
+-- GOTO StartTimer with settings.autolock_delay_player_disconnect_minutes
 
-- Vehicle engine start, vehicle deleted or destroyed
--- Start measuring distance between player and car
--- If distance > proximity_lock_distance_meters, goto LockVehicle
+- On vehicle spawn (restart, vehicle bought, parked out, ..)
+-- enable_startup_autolock_timer not set? EXIT
+-- GOTO StartTimer with settings.autolock_delay_startup_minutes
+
+- On vehicle engine start, vehicle deleted or destroyed
+-- Remove any timers on this vehicle
 
 - StartTimer
 -- Vehicle has no lock? EXIT
 -- Vehicle is locked already? EXIT
 -- Start the actual timer
-
-- On timer finish
--- Goto LockVehicle
+-- On timer finish: GOTO LockVehicle
 
 - LockVehicle
 -- Vehicle has no lock? EXIT
 -- Vehicle is locked already? EXIT
+-- lock_only_when_all_doors_are_closed set, but not all doors are closed? EXIT
+-- enable_close_doors_on_autolock set? Close all doors
+-- enable_engine_off_on_autolock set? Engine off
 -- LOCK!
 
 */
@@ -175,11 +187,13 @@ class AutolockVehicles_App
 		player.m_AutolockVehicles_LastUnlockedVehicle = car;
         car.m_AutolockVehicles_LastPlayerUnlocked = player;
 
+		if(!m_Settings.enable_proximity_autolock) return;
+
 		RemoveAutolockTimer(car, "StartProximityWatcher");
 
 		string networkId = AutolockVehicles_Helper.GetNetworkID(car);
 
-		Param2<string, int> carParam = new Param2<string, int>(networkId, AutolockVehicles_App.GetInstance().m_Settings.proximity_lock_distance_meters);
+		Param2<string, int> carParam = new Param2<string, int>(networkId, m_Settings.proximity_lock_distance_meters);
 		GetGame().RPCSingleParam(player, AutolockVehicles_RPC.START_PROXIMITY, carParam, true, player.GetIdentity());
 	}
 
@@ -207,6 +221,12 @@ class AutolockVehicles_App
             return;
         }
       
+	  	if(player.m_AutolockVehicles_LastUnlockedVehicle.m_AutolockVehicles_LastPlayerUnlocked.GetID() != player.GetID())
+        {
+            m_Logger.Log("Vehicle wasn't unlocked last by player, exiting");
+            return;
+        }
+
         StartAutolockTimer(player.m_AutolockVehicles_LastUnlockedVehicle, AutolockVehicles_TimerMode.PLAYERDISCONNECT);
 	}
 

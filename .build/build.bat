@@ -16,7 +16,7 @@ set modlist=@TraderPlus;@VPPAdminTools;@Dabs Framework;@CF
 set srcpath=%modbase%%modpath%%modname%
 set dayzclientpath=C:\Program Files (x86)\Steam\steamapps\common\DayZ
 set dayzserverpath=C:\Program Files (x86)\Steam\steamapps\common\DayZServer
-set buildpath=P:\mods\build
+set buildpath=P:\mods\local
 set mission=dayzOffline.chernarusplus
 set keypath=C:\Users\ingma\OneDrive\Documents\Github\dayztools\keys\inkihh\inkihh
 set clientprofile=P:\mods\profiles\_dev\%mission%\client
@@ -79,7 +79,7 @@ echo -------------------------------------------------------
 echo .
 echo Deleting old build
 echo .
-rmdir /s /q "%buildpath%\@%modpath%\@%modname%"
+rmdir /s /q "%buildpath%\%modpath%\@%modname%"
 
 echo -------------------------------------------------------
 echo .
@@ -105,9 +105,7 @@ echo PACKING
 echo .
 cls
 
-del /f /s "P:\mods\serverside\Addons\%modname%_*.pbo"
-
-start /B "MakePbo" "%makepbopath%" "%srcpath%" "P:\mods\local\@AutolockVehicles\Addons\%modname%_%version%.pbo"
+start /B "MakePbo" "%makepbopath%" "%srcpath%" "%buildpath%\%modpath%@%modname%\Addons\%modname%.pbo"
 ::start /B "MakePbo" "%makepbopath%" "-X=*-U*.git,*.vscode,*.delete" "%srcpath%" "P:\mods\local\@FINKSmartphone\Addons\%modname%_%version%.pbo"
 ::start /B "PboProject" "%pboprojectpath%" "-S" "+$" "+J" "-W" "+N" "-C" "-K" "%srcpath%" "-M=P:\mods\local\@FINKSmartphone"
 ::start /B "MakePbo" "%makepbopath%" "-W" "-X=*-U*.git,*.vscode,*.delete" "%srcpath%" "P:\mods\local\@FINKSmartphone\Addons\%modname%_%version%.pbo"
@@ -133,11 +131,11 @@ echo -------------------------------------------------------
 echo .
 echo SIGNING
 :: @CHANGEME
-start /B  "" "%signtoolpath%" "%keypath%.biprivatekey" "P:\mods\local\@AutolockVehicles\Addons\%modname%_%version%.pbo"
+start /B  "" "%signtoolpath%" "%keypath%.biprivatekey" "%buildpath%\%modpath%@%modname%\Addons\%modname%.pbo"
 TIMEOUT 1
 :skipsign
 
-::goto :eof
+goto :eof
 
 :juststart
 
