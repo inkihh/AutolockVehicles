@@ -4,8 +4,8 @@ modded class PlayerBase extends ManBase
         ref AutolockVehicles_App m_AutolockVehicles_App = AutolockVehicles_App.GetInstance();
     #endif
 
-    CarScript m_AutolockVehicles_CurrentUnlockedVehicle;
-    int m_AutolockVehicles_ProximityLock_DistanceMeters;
+    CarScript m_AutolockVehicles_LastUnlockedVehicle;
+    int m_AutolockVehicles_proximity_lock_distance_meters;
 
     #ifdef SERVER
         override void OnDisconnect()
@@ -37,7 +37,7 @@ modded class PlayerBase extends ManBase
 
         switch (rpc_type)
         {
-            case AutolockVehicles_RPC.START_PROXIMITY:
+            case AutolockVehicles_RPC.START_PROXIMITY: // triggered by unlocking
             {
                 if(!GetGame().IsClient()) return;
 
@@ -45,24 +45,21 @@ modded class PlayerBase extends ManBase
                 if (!ctx.Read(carParam)) return;
 
                 string persistentId = carParam.param1;
-                m_AutolockVehicles_ProximityLock_DistanceMeters = carParam.param2;
+                m_AutolockVehicles_proximity_lock_distance_meters = carParam.param2;
                 
-                Print("[AutolockVehicles] persistentId from rpc: " + persistentId);
-                Print("[AutolockVehicles] m_AutolockVehicles_ProximityLock_DistanceMeters: " + m_AutolockVehicles_ProximityLock_DistanceMeters);
-
                 array<Object> objects_around = new array<Object>;
                 GetGame().GetObjectsAtPosition(GetPosition(), 10, objects_around, NULL);
 
                 foreach(Object object_around : objects_around)
                 {
-                    if(!object_around.IsInherited(CarScript)) continue;
-
-                    Print("[AutolockVehicles] m_AutolockVehicles_GetNetworkId(object_around) " + AutolockVehicles_Helper.GetNetworkID(object_around));
+                    CarScript car = CarScript.Cast(object_around);
+                    if(!car) continue;
 
                     if(m_AutolockVehicles_GetNetworkId(object_around) == persistentId)
                     {
-                        Print("[AutolockVehicles] setting m_AutolockVehicles_CurrentUnlockedVehicle");
-                        m_AutolockVehicles_CurrentUnlockedVehicle = CarScript.Cast(object_around);
+                        m_AutolockVehicles_LastUnlockedVehicle = CarScript.Cast(object_around);
+                        car.m_AutolockVehicles_LastPlayerUnlocked = this;
+                        car.m_AutolockVehicles_WasProximityLocked = false;
                         break;
                     }
                 }
@@ -79,9 +76,9 @@ modded class PlayerBase extends ManBase
 
                 PlayerBase player = PlayerBase.Cast(sender.GetPlayer());
                 if(!player) return;
-                if(!player.m_AutolockVehicles_CurrentUnlockedVehicle) return;
+                if(!player.m_AutolockVehicles_LastUnlockedVehicle) return;
 
-                AutolockVehicles_App.GetInstance().LockVehicle(player.m_AutolockVehicles_CurrentUnlockedVehicle);
+                AutolockVehicles_App.GetInstance().LockVehicle(player.m_AutolockVehicles_LastUnlockedVehicle);
 
                 break;
             }

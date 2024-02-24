@@ -25,5 +25,21 @@ class AutolockVehicles_TraderPlusCarLock : AutolockVehicles_KeyModBase
 		car.SetCarLock(true);
     }
 }
+
+modded class ActionCarUnLock
+{
+    override void OnStartServer(ActionData action_data)
+    {
+        super.OnStartServer(action_data);
+
+        PlayerBase player = action_data.m_Player;
+        if(!player) return;
+
+        CarScript car = CarScript.Cast(action_data.m_Target.GetObject());
+		if(!car) return;
+
+        AutolockVehicles_App.GetInstance().StartProximityWatcher(player, car);
+    }
+}
 #endif
 #endif

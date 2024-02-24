@@ -24,4 +24,20 @@ class AutolockVehicles_Trader : AutolockVehicles_KeyModBase
         car.SynchronizeValues();
     }
 }
+
+modded class ActionUnlockVehicle
+{	
+	override void OnFinishProgressServer(ActionData action_data)
+	{	
+        super.OnFinishProgressServer(action_data);
+
+        PlayerBase player = action_data.m_Player;
+        if(!player) return;
+
+        CarScript car = CarScript.Cast(action_data.m_Target.GetParent());
+		if(!car) return;
+
+        AutolockVehicles_App.GetInstance().StartProximityWatcher(player, car);
+	}
+};
 #endif

@@ -3,6 +3,7 @@ modded class CarScript
     ref AutolockVehicles_App m_AutolockVehicles_App;
 
     bool m_AutolockVehicles_WasProximityLocked;
+    PlayerBase m_AutolockVehicles_LastPlayerUnlocked;
 
     override void DeferredInit()
     {

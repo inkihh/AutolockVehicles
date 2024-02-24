@@ -24,4 +24,20 @@ class AutolockVehicles_Expansion : AutolockVehicles_KeyModBase
         car.LockCar(adminkey);
     }
 }
+
+modded class ExpansionVehicleActionUnlockVehicle: ActionInteractBase
+{
+	override void OnStartServer( ActionData action_data )
+	{
+		super.OnStartServer( action_data );
+		
+        PlayerBase player = action_data.m_Player;
+        if(!player) return;
+
+        CarScript car = CarScript.Cast(action_data.m_Target.GetObject());
+		if(!car) return;
+
+        AutolockVehicles_App.GetInstance().StartProximityWatcher(player, car);
+	}
+};
 #endif

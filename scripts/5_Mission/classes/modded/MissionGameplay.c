@@ -7,8 +7,10 @@ modded class MissionGameplay
         PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
         if(!player) return;
 
-        CarScript car = player.m_AutolockVehicles_CurrentUnlockedVehicle;
+        CarScript car = player.m_AutolockVehicles_LastUnlockedVehicle;
         if(!car) return;
+
+        if(!car.m_AutolockVehicles_LastPlayerUnlocked || player.GetID() != car.m_AutolockVehicles_LastPlayerUnlocked.GetID()) return;
 
         vector playerPosition = player.GetPosition();
         vector vehiclePosition = car.GetPosition();
@@ -18,18 +20,12 @@ modded class MissionGameplay
         int distanceBetweenOwnerAndVehicle = vector.Distance(playerPosition, vehiclePosition);
         bool wasProximityLocked = car.m_AutolockVehicles_WasProximityLocked;
 
-        if(distanceBetweenOwnerAndVehicle > player.m_AutolockVehicles_ProximityLock_DistanceMeters && !wasProximityLocked)
+        if(distanceBetweenOwnerAndVehicle > player.m_AutolockVehicles_proximity_lock_distance_meters && !wasProximityLocked)
         {
             car.m_AutolockVehicles_WasProximityLocked = true;
            
             Print("[AutolockVehicles.MissionGameplay] Leaving proximity, locking");
             player.RPCSingleParam(AutolockVehicles_RPC.LOCK_PROXIMITY, null, true);
-        }
-
-        if(distanceBetweenOwnerAndVehicle < player.m_AutolockVehicles_ProximityLock_DistanceMeters && wasProximityLocked)
-        {
-            player.m_AutolockVehicles_CurrentUnlockedVehicle.m_AutolockVehicles_WasProximityLocked = false;
-            Print("[AutolockVehicles.MissionGameplay] Reentering proximity, enabling proximity watch");
         }
 	}
 }

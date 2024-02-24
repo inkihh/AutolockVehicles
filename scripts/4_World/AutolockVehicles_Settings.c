@@ -1,16 +1,16 @@
 class AutolockVehicles_Settings
 {
 	int debug_log_level = 1;
-	int UseKeyMod = 0;
-	int enableStartupAutolock = 0;
-	int enableDisconnectAutolock = 0;
-	int enableProximityAutolock = 0;
-	int enableCloseDoors = 0;
-	int lockOnlyWhenAllDoorsAreClosed = 1;
-	int enableEngineOff = 0;
-	int AutolockDelay_Startup = 2;
-	int AutolockDelay_PlayerDisconnect = 1;
-	int ProximityLock_DistanceMeters = 5;
+	int use_key_mod = 0;
+	int enable_startup_autolock_timer = 0;
+	int enable_disconnect_autolock_timer = 0;
+	int enable_proximity_autolock = 0;
+	int enable_close_doors_on_autolock = 0;
+	int enable_engine_off_on_autolock = 0;
+	int lock_only_when_all_doors_are_closed = 1;
+	int autolock_delay_startup_minutes = 2;
+	int autolock_delay_player_disconnect_minutes = 1;
+	int proximity_lock_distance_meters = 5;
 	
 	[NonSerialized()]
 	private bool m_IsLoaded;
