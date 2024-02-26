@@ -23,6 +23,16 @@ class AutolockVehicles_Trader : AutolockVehicles_KeyModBase
 		car.m_Trader_Locked = true;
 		car.SynchronizeValues();
 	}
+
+	override void UnlockVehicle(Transport vehicle)
+	{
+		CarScript car;
+		car = CarScript.Cast(vehicle);
+		if(!car) return;
+
+		car.m_Trader_Locked = false;
+		car.SynchronizeValues();
+	}
 }
 
 modded class ActionUnlockVehicle

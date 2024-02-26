@@ -27,5 +27,13 @@ modded class MissionGameplay
 			Print("[AutolockVehicles.MissionGameplay] Leaving proximity, locking");
 			player.RPCSingleParam(AutolockVehicles_RPC.LOCK_PROXIMITY, null, true);
 		}
+
+		if(distanceBetweenOwnerAndVehicle < player.m_AutolockVehicles_proximity_lock_distance_meters && wasProximityLocked)
+		{
+			car.m_AutolockVehicles_WasProximityLocked = false;
+		   
+			Print("[AutolockVehicles.MissionGameplay] Entering proximity, unlocking");
+			player.RPCSingleParam(AutolockVehicles_RPC.UNLOCK_PROXIMITY, null, true);
+		}
 	}
 }

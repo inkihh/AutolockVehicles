@@ -35,6 +35,8 @@ modded class PlayerBase extends ManBase
 	{
 		super.OnRPC(sender, rpc_type, ctx);
 
+		PlayerBase player;
+
 		switch (rpc_type)
 		{
 			case AutolockVehicles_RPC.START_PROXIMITY: // triggered by unlocking
@@ -74,11 +76,26 @@ modded class PlayerBase extends ManBase
 
 				AutolockVehicles_App.GetInstance().m_Logger.Log("[AutolockVehicles] AutolockVehicles_RPC.LOCK_PROXIMITY");
 
-				PlayerBase player = PlayerBase.Cast(sender.GetPlayer());
+				player = PlayerBase.Cast(sender.GetPlayer());
 				if(!player) return;
 				if(!player.m_AutolockVehicles_LastUnlockedVehicle) return;
 
 				AutolockVehicles_App.GetInstance().LockVehicle(player.m_AutolockVehicles_LastUnlockedVehicle);
+
+				break;
+			}
+
+			case AutolockVehicles_RPC.UNLOCK_PROXIMITY:
+			{
+				if(!GetGame().IsServer()) return;
+
+				AutolockVehicles_App.GetInstance().m_Logger.Log("[AutolockVehicles] AutolockVehicles_RPC.UNLOCK_PROXIMITY");
+
+				player = PlayerBase.Cast(sender.GetPlayer());
+				if(!player) return;
+				if(!player.m_AutolockVehicles_LastUnlockedVehicle) return;
+
+				AutolockVehicles_App.GetInstance().UnlockVehicle(player.m_AutolockVehicles_LastUnlockedVehicle);
 
 				break;
 			}

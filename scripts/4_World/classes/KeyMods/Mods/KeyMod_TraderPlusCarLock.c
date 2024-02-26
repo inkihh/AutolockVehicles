@@ -24,6 +24,16 @@ class AutolockVehicles_TraderPlusCarLock : AutolockVehicles_KeyModBase
 		car.SetSoundToPlay(1);
 		car.SetCarLock(true);
 	}
+
+	override void UnlockVehicle(Transport vehicle)
+	{
+		CarScript car;
+		car = CarScript.Cast(vehicle);
+		if(!car) return;
+
+		car.SetSoundToPlay(2);
+		car.SetCarLock(false);
+	}
 }
 
 modded class ActionCarUnLock

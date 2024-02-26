@@ -9,10 +9,10 @@ set serverip=192.168.178.96
 set serverport=2302
 set password=inkihh
 set playername=inkihh
-::set modlist=@DayZ-Expansion-Bundle;@DayZ-Expansion-Core;@DayZ-Expansion-Licensed;@VPPAdminTools;@Dabs Framework;@CF
+set modlist=@DayZ-Expansion-Bundle;@DayZ-Expansion-Core;@DayZ-Expansion-Licensed;@VPPAdminTools;@Dabs Framework;@CF
 ::set modlist=@MuchCarKey;@VPPAdminTools;@Dabs Framework;@CF
 ::set modlist=@Trader;@VPPAdminTools;@Dabs Framework;@CF
-set modlist=@TraderPlus;@VPPAdminTools;@Dabs Framework;@CF
+::set modlist=@TraderPlus;@VPPAdminTools;@Dabs Framework;@CF
 set srcpath=%modbase%%modpath%%modname%
 set dayzclientpath=C:\Program Files (x86)\Steam\steamapps\common\DayZ
 set dayzserverpath=C:\Program Files (x86)\Steam\steamapps\common\DayZServer
@@ -25,6 +25,8 @@ set serverconfig=P:\mods\config\%mission%.dev.cfg
 set pboprojectpath=C:\Program Files (x86)\Mikero\DePboTools\bin\PboProject.exe
 set makepbopath=C:\Program Files (x86)\Mikero\DePboTools\bin\MakePbo.exe
 set signtoolpath=C:\Program Files (x86)\Steam\steamapps\common\DayZ Tools\Bin\DsUtils\DSsignfile.exe
+
+set dowipe=0
 
 for /f "tokens=*" %%i in ('node .\modpath.js "%modlist%"') do set fullmodlist=%%i
 
@@ -44,10 +46,12 @@ TIMEOUT 3
 
 :nokill
 
-goto :nowipe
-rmdir /s /q "%dayzserverpath%\mpmissions\dayzOffline.chernarusplus\storage_1"
-rmdir /s /q "%dayzserverpath%\mpmissions\dayzOffline.chernarusplus\expansion"
-:nowipe
+if %dowipe%==1 (
+	echo DO WIPE?
+	pause
+	rmdir /s /q "%dayzserverpath%\mpmissions\dayzOffline.chernarusplus\storage_1"
+	rmdir /s /q "%dayzserverpath%\mpmissions\dayzOffline.chernarusplus\expansion"
+)
 
 call :GetUnixTime unixtime
 
@@ -135,7 +139,7 @@ start /B  "" "%signtoolpath%" "%keypath%.biprivatekey" "%buildpath%\%modpath%@%m
 TIMEOUT 1
 :skipsign
 
-goto :eof
+::goto :eof
 
 :juststart
 

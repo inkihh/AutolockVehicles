@@ -23,7 +23,17 @@ class AutolockVehicles_MuchCarKey : AutolockVehicles_KeyModBase
 		car.m_IsCKLocked = true;
 		car.SynchronizeValues();
 		car.ResetLifetime();
-			
+	}
+
+	override void unlockVehicle(Transport vehicle)
+	{
+		CarScript car;
+		car = CarScript.Cast(vehicle);
+		if(!car) return;
+
+		car.m_IsCKLocked = false;
+		car.SynchronizeValues();
+		car.ResetLifetime();
 	}
 }
 
