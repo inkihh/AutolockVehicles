@@ -1,88 +1,105 @@
 modded class PlayerBase extends ManBase
 {
-    #ifdef SERVER
-        ref AutolockVehicles_App m_AutolockVehicles_App = AutolockVehicles_App.GetInstance();
-    #endif
+	#ifdef SERVER
+		ref AutolockVehicles_App m_AutolockVehicles_App = AutolockVehicles_App.GetInstance();
+	#endif
 
-    CarScript m_AutolockVehicles_LastUnlockedVehicle;
-    int m_AutolockVehicles_proximity_lock_distance_meters;
+	CarScript m_AutolockVehicles_LastUnlockedVehicle;
+	int m_AutolockVehicles_proximity_lock_distance_meters;
 
-    #ifdef SERVER
-        override void OnDisconnect()
-        {
-            if (!GetGame().IsServer()) return;
-            if(!m_AutolockVehicles_App) m_AutolockVehicles_App = AutolockVehicles_App.GetInstance();
+	#ifdef SERVER
+		override void OnDisconnect()
+		{
+			if (!GetGame().IsServer()) return;
+			if(!m_AutolockVehicles_App) m_AutolockVehicles_App = AutolockVehicles_App.GetInstance();
 
-            m_AutolockVehicles_App.OnPlayerDisconnect(this);
-            super.OnDisconnect();
-        }
-    #endif
+			m_AutolockVehicles_App.OnPlayerDisconnect(this);
+			super.OnDisconnect();
+		}
+	#endif
 
-    string m_AutolockVehicles_GetNetworkId(Object object)
-    {
-        if(!object) return "";
+	string m_AutolockVehicles_GetNetworkId(Object object)
+	{
+		if(!object) return "";
 
-        int lowBits;
-        int highBits;
-        object.GetNetworkID(lowBits, highBits);
+		int lowBits;
+		int highBits;
+		object.GetNetworkID(lowBits, highBits);
 
-        string networkId = lowBits.ToString() + highBits.ToString();
+		string networkId = lowBits.ToString() + highBits.ToString();
 
-        return networkId;
-    }
+		return networkId;
+	}
 
-    override void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
-    {
-        super.OnRPC(sender, rpc_type, ctx);
+	override void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
+	{
+		super.OnRPC(sender, rpc_type, ctx);
 
-        switch (rpc_type)
-        {
-            case AutolockVehicles_RPC.START_PROXIMITY: // triggered by unlocking
-            {
-                if(!GetGame().IsClient()) return;
+		PlayerBase player;
 
-                Param2<string, int> carParam;
-                if (!ctx.Read(carParam)) return;
+		switch (rpc_type)
+		{
+			case AutolockVehicles_RPC.START_PROXIMITY: // triggered by unlocking
+			{
+				if(!GetGame().IsClient()) return;
 
-                string persistentId = carParam.param1;
-                m_AutolockVehicles_proximity_lock_distance_meters = carParam.param2;
-                
-                array<Object> objects_around = new array<Object>;
-                GetGame().GetObjectsAtPosition(GetPosition(), 10, objects_around, NULL);
+				Param2<string, int> carParam;
+				if (!ctx.Read(carParam)) return;
 
-                foreach(Object object_around : objects_around)
-                {
-                    CarScript car = CarScript.Cast(object_around);
-                    if(!car) continue;
+				string persistentId = carParam.param1;
+				m_AutolockVehicles_proximity_lock_distance_meters = carParam.param2;
+				
+				array<Object> objects_around = new array<Object>;
+				GetGame().GetObjectsAtPosition(GetPosition(), 10, objects_around, NULL);
 
-                    if(m_AutolockVehicles_GetNetworkId(object_around) == persistentId)
-                    {
-                        m_AutolockVehicles_LastUnlockedVehicle = CarScript.Cast(object_around);
-                        car.m_AutolockVehicles_LastPlayerUnlocked = this;
-                        car.m_AutolockVehicles_WasProximityLocked = false;
-                        break;
-                    }
-                }
+				foreach(Object object_around : objects_around)
+				{
+					CarScript car = CarScript.Cast(object_around);
+					if(!car) continue;
 
-                break;
-            }
+					if(m_AutolockVehicles_GetNetworkId(object_around) == persistentId)
+					{
+						m_AutolockVehicles_LastUnlockedVehicle = CarScript.Cast(object_around);
+						car.m_AutolockVehicles_LastPlayerUnlocked = this;
+						car.m_AutolockVehicles_WasProximityLocked = false;
+						break;
+					}
+				}
 
-            #ifdef SERVER
-            case AutolockVehicles_RPC.LOCK_PROXIMITY:
-            {
-                if(!GetGame().IsServer()) return;
+				break;
+			}
 
-                AutolockVehicles_App.GetInstance().m_Logger.Log("[AutolockVehicles] AutolockVehicles_RPC.LOCK_PROXIMITY");
+			#ifdef SERVER
+			case AutolockVehicles_RPC.LOCK_PROXIMITY:
+			{
+				if(!GetGame().IsServer()) return;
 
-                PlayerBase player = PlayerBase.Cast(sender.GetPlayer());
-                if(!player) return;
-                if(!player.m_AutolockVehicles_LastUnlockedVehicle) return;
+				AutolockVehicles_App.GetInstance().m_Logger.Log("[AutolockVehicles] AutolockVehicles_RPC.LOCK_PROXIMITY");
 
-                AutolockVehicles_App.GetInstance().LockVehicle(player.m_AutolockVehicles_LastUnlockedVehicle);
+				player = PlayerBase.Cast(sender.GetPlayer());
+				if(!player) return;
+				if(!player.m_AutolockVehicles_LastUnlockedVehicle) return;
 
-                break;
-            }
-            #endif
-        }
-    }
+				AutolockVehicles_App.GetInstance().LockVehicle(player.m_AutolockVehicles_LastUnlockedVehicle);
+
+				break;
+			}
+
+			case AutolockVehicles_RPC.UNLOCK_PROXIMITY:
+			{
+				if(!GetGame().IsServer()) return;
+
+				AutolockVehicles_App.GetInstance().m_Logger.Log("[AutolockVehicles] AutolockVehicles_RPC.UNLOCK_PROXIMITY");
+
+				player = PlayerBase.Cast(sender.GetPlayer());
+				if(!player) return;
+				if(!player.m_AutolockVehicles_LastUnlockedVehicle) return;
+
+				AutolockVehicles_App.GetInstance().UnlockVehicle(player.m_AutolockVehicles_LastUnlockedVehicle);
+
+				break;
+			}
+			#endif
+		}
+	}
 }

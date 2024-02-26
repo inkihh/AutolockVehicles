@@ -48,7 +48,7 @@ class AutolockVehicles_App
 
 	ref AutolockVehicles_Logger m_Logger;
 	ref AutolockVehicles_Settings m_Settings;
-	    
+		
 	string m_TimerTargetFunctionName = "LockVehicle";
 
 	ref map<string, ref AutolockVehicles_KeyModBase> m_KeyMods;
@@ -64,27 +64,31 @@ class AutolockVehicles_App
 		m_Timers = new map<int, ref Timer>;
 		m_KeyMods = new map<string, ref AutolockVehicles_KeyModBase>();
 
+		s_Instance = this;
+
 		AddKeyMod("CUSTOM", new AutolockVehicles_Custom());
 
 		#ifdef CarLock
 		#ifndef CARLOCKDISABLE
+			m_Logger.Log("[AutolockVehicles_App] adding TRADERPLUSCARLOCK KeyMod");
 			AddKeyMod("TRADERPLUSCARLOCK", new AutolockVehicles_TraderPlusCarLock());
 		#endif
 		#endif
 
 		#ifdef MuchCarKey
+			m_Logger.Log("[AutolockVehicles_App] adding MUCHCARKEY KeyMod");
 			AddKeyMod("MUCHCARKEY", new AutolockVehicles_MuchCarKey());
 		#endif
 
 		#ifdef Trader
+			m_Logger.Log("[AutolockVehicles_App] adding TRADER KeyMod");
 			AddKeyMod("TRADER", new AutolockVehicles_Trader());
 		#endif
 
-		#ifdef EXPANSIONMODVEHICLE
+		#ifdef DZ_Expansion_Vehicles
+			m_Logger.Log("[AutolockVehicles_App] adding EXPANSION KeyMod");
 			AddKeyMod("EXPANSION", new AutolockVehicles_Expansion());
 		#endif
-
-		s_Instance = this;
 
 		if (!m_Settings.IsLoaded())
 		{
@@ -117,75 +121,77 @@ class AutolockVehicles_App
 	}
 
 	void StartAutolockTimer(CarScript car, AutolockVehicles_TimerMode mode)
-    {
+	{
 		if(!car)
-        {
-            m_Logger.Log("No vehicle, exiting");
-            return;
-        }
-       
+		{
+			m_Logger.Log("No vehicle, exiting");
+			return;
+		}
+	   
 		AutolockVehicles_KeyModBase keyMod = GetKeyMod();
 		if(!keyMod)
-        {
-            m_Logger.Log("use_key_mod is set to " + m_Settings.use_key_mod + " (" + EnumTools.EnumToString(AutolockVehicles_KeyMod, m_Settings.use_key_mod) + ") but the required mod doesn't seem to be installed");
-            return;
-        }
+		{
+			m_Logger.Log("use_key_mod is set to " + m_Settings.use_key_mod + " (" + EnumTools.EnumToString(AutolockVehicles_KeyMod, m_Settings.use_key_mod) + ") but the required mod doesn't seem to be installed");
+			return;
+		}
 
 		if(keyMod.GetVehicleState(car) == AutolockVehicles_State.UNASSIGNED)
-        {
-            m_Logger.Log("Car doesn't even have a lock, no timer will be started, exiting");
-            return;
-        }
+		{
+			m_Logger.Log("Car doesn't even have a lock/key assigned, no timer will be started, exiting");
+			return;
+		}
 
-        if(keyMod.GetVehicleState(car) == AutolockVehicles_State.LOCKED)
-        {
-            m_Logger.Log("Car already locked, no timer will be started, exiting");
-            return;
-        }
+		if(keyMod.GetVehicleState(car) == AutolockVehicles_State.LOCKED)
+		{
+			m_Logger.Log("Car already locked, no timer will be started, exiting");
+			return;
+		}
 
 		if(keyMod.GetVehicleState(car) == AutolockVehicles_State.ERROR)
-        {
-            m_Logger.Log("Vehicle state ERROR - use_key_mod set to 0, but no custom KeyMod implemented?", AutolockVehicles_LogLevel.CRITICAL);
-            return;
-        }
+		{
+			m_Logger.Log("Vehicle state ERROR - use_key_mod set to 0, but no custom KeyMod implemented?", AutolockVehicles_LogLevel.CRITICAL);
+			return;
+		}
 
-        int AutolockDelay;
+		int AutolockDelay;
 
-        switch(mode)
-        {
-            case AutolockVehicles_TimerMode.STARTUP:
-            {
+		switch(mode)
+		{
+			case AutolockVehicles_TimerMode.STARTUP:
+			{
 				if(!m_Settings.enable_startup_autolock_timer) return;
-                AutolockDelay = m_Settings.autolock_delay_startup_minutes;
-                break;
-            }
+				AutolockDelay = m_Settings.autolock_delay_startup_minutes;
+				break;
+			}
 			case AutolockVehicles_TimerMode.PLAYERDISCONNECT:
-            {
+			{
 				if(!m_Settings.enable_disconnect_autolock_timer) return;
-                AutolockDelay = m_Settings.autolock_delay_player_disconnect_minutes;
-                break;
-            }
-            default:
-            {
-                m_Logger.Log("Unknown AutolockVehicles_TimerMode:" + mode);
-                return;
-            }
-        }
+				AutolockDelay = m_Settings.autolock_delay_player_disconnect_minutes;
+				break;
+			}
+			default:
+			{
+				m_Logger.Log("Unknown AutolockVehicles_TimerMode:" + mode);
+				return;
+			}
+		}
 
-        m_Logger.Log("Starting autolock timer, mode:" + typename.EnumToString(AutolockVehicles_TimerMode, mode) + ", minutes:" + AutolockDelay);
+		m_Logger.Log("Starting autolock timer, mode:" + typename.EnumToString(AutolockVehicles_TimerMode, mode) + ", minutes:" + AutolockDelay);
 
-        Param1<CarScript> carParam = new Param1<CarScript>(car);
+		Param1<CarScript> carParam = new Param1<CarScript>(car);
 		Timer timer = new Timer();
 		timer.Run((AutolockDelay * 60), this, m_TimerTargetFunctionName, carParam, false);
 		m_Timers.Set(car.GetID(), timer);
-    }
+	}
 
 	void StartProximityWatcher(PlayerBase player, CarScript car)
 	{
 		if( !player || !car ) return;
 
+		AutolockVehicles_App.GetInstance().m_Logger.Log("[AutolockVehicles_App.StartProximityWatcher]");
+
 		player.m_AutolockVehicles_LastUnlockedVehicle = car;
-        car.m_AutolockVehicles_LastPlayerUnlocked = player;
+		car.m_AutolockVehicles_LastPlayerUnlocked = player;
 
 		if(!m_Settings.enable_proximity_autolock) return;
 
@@ -198,13 +204,13 @@ class AutolockVehicles_App
 	}
 
 	void RemoveAutolockTimer(CarScript car, string Reason)
-    {
-        if(!GetGame().IsServer()) return;
+	{
+		if(!GetGame().IsServer()) return;
 		if(!car) return;
 
-        m_Logger.Log("Removing autolock timer (" + Reason + ")");
-        m_Timers.Remove(car.GetID());
-    }
+		m_Logger.Log("Removing autolock timer (" + Reason + ")");
+		m_Timers.Remove(car.GetID());
+	}
 
 	void OnPlayerDisconnect(PlayerBase player)
 	{
@@ -213,21 +219,21 @@ class AutolockVehicles_App
 		if(!m_Settings.enable_disconnect_autolock_timer) return;
 		
 		string playerId = player.GetIdentity().GetPlainId();
-        m_Logger.Log("Starting OnDisconnect autolock, player:" + playerId);
+		m_Logger.Log("Starting OnDisconnect autolock, player:" + playerId);
 
 		if(!player.m_AutolockVehicles_LastUnlockedVehicle)
-        {
-            m_Logger.Log("Player doesn't have a currently unlocked vehicle assigned, exiting");
-            return;
-        }
-      
+		{
+			m_Logger.Log("Player doesn't have a currently unlocked vehicle assigned, exiting");
+			return;
+		}
+	  
 	  	if(player.m_AutolockVehicles_LastUnlockedVehicle.m_AutolockVehicles_LastPlayerUnlocked.GetID() != player.GetID())
-        {
-            m_Logger.Log("Vehicle wasn't unlocked last by player, exiting");
-            return;
-        }
+		{
+			m_Logger.Log("Vehicle wasn't unlocked last by player, exiting");
+			return;
+		}
 
-        StartAutolockTimer(player.m_AutolockVehicles_LastUnlockedVehicle, AutolockVehicles_TimerMode.PLAYERDISCONNECT);
+		StartAutolockTimer(player.m_AutolockVehicles_LastUnlockedVehicle, AutolockVehicles_TimerMode.PLAYERDISCONNECT);
 	}
 
 	array<string> GetDoorAnimSources(CarScript car)
@@ -282,29 +288,29 @@ class AutolockVehicles_App
 		m_Logger.Log("Starting LockVehicle");
 
 		if(!car)
-        {
-            m_Logger.Log("No car, exiting");
-            return;
-        }
+		{
+			m_Logger.Log("No car, exiting");
+			return;
+		}
 
 		AutolockVehicles_KeyModBase keyMod = GetKeyMod();
 		if(!keyMod)
-        {
-            m_Logger.Log("use_key_mod is set to " + m_Settings.use_key_mod + " (" + EnumTools.EnumToString(AutolockVehicles_KeyMod, m_Settings.use_key_mod) + ") but the required mod doesn't seemto be installed, not locking");
-            return;
-        }
+		{
+			m_Logger.Log("use_key_mod is set to " + m_Settings.use_key_mod + " (" + EnumTools.EnumToString(AutolockVehicles_KeyMod, m_Settings.use_key_mod) + ") but the required mod doesn't seemto be installed, not locking");
+			return;
+		}
 
 		if(keyMod.GetVehicleState(car) == AutolockVehicles_State.UNASSIGNED)
-        {
-            m_Logger.Log("Car doesn't even have a lock, not locking");
-            return;
-        }
+		{
+			m_Logger.Log("Car doesn't even have a lock/key assigned, not locking");
+			return;
+		}
 
-        if(keyMod.GetVehicleState(car) == AutolockVehicles_State.LOCKED)
-        {
-            m_Logger.Log("Car already locked, not locking");
-            return;
-        }
+		if(keyMod.GetVehicleState(car) == AutolockVehicles_State.LOCKED)
+		{
+			m_Logger.Log("Car already locked, not locking");
+			return;
+		}
 
 		if(m_Settings.lock_only_when_all_doors_are_closed && !AreAllDoorsClosed(car))
 		{
@@ -317,5 +323,39 @@ class AutolockVehicles_App
 		if(m_Settings.enable_close_doors_on_autolock) CloseAllDoors(car);
 		if(m_Settings.enable_engine_off_on_autolock) car.EngineStop();
 		keyMod.LockVehicle(car);
+	}
+
+	void UnlockVehicle(CarScript car)
+	{
+		m_Logger.Log("Starting UnlockVehicle");
+
+		if(!car)
+		{
+			m_Logger.Log("No car, exiting");
+			return;
+		}
+
+		AutolockVehicles_KeyModBase keyMod = GetKeyMod();
+		if(!keyMod)
+		{
+			m_Logger.Log("use_key_mod is set to " + m_Settings.use_key_mod + " (" + EnumTools.EnumToString(AutolockVehicles_KeyMod, m_Settings.use_key_mod) + ") but the required mod doesn't seemto be installed, not unlocking");
+			return;
+		}
+
+		if(keyMod.GetVehicleState(car) == AutolockVehicles_State.UNASSIGNED)
+		{
+			m_Logger.Log("Car doesn't even have a lock/key assigned, not unlocking");
+			return;
+		}
+
+		if(keyMod.GetVehicleState(car) == AutolockVehicles_State.UNLOCKED)
+		{
+			m_Logger.Log("Car already unlocked, not unlocking");
+			return;
+		}
+
+		m_Logger.Log("Unlocking vehicle");
+
+		keyMod.UnlockVehicle(car);
 	}
 }
