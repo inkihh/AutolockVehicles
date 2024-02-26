@@ -25,7 +25,7 @@ class AutolockVehicles_MuchCarKey : AutolockVehicles_KeyModBase
 		car.ResetLifetime();
 	}
 
-	override void unlockVehicle(Transport vehicle)
+	override void UnlockVehicle(Transport vehicle)
 	{
 		CarScript car;
 		car = CarScript.Cast(vehicle);
