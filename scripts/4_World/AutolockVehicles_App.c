@@ -190,16 +190,22 @@ class AutolockVehicles_App
 
 		AutolockVehicles_App.GetInstance().m_Logger.Log("[AutolockVehicles_App.StartProximityWatcher]");
 
+		if(!m_Settings.enable_proximity_autolock && !m_Settings.enable_proximity_autounlock) return;
+
+		if(m_Settings.proximity_lock_distance_meters <= m_Settings.proximity_unlock_distance_meters) 
+		{
+			m_Logger.Log("proximity_lock_distance_meters must be larger than proximity_unlock_distance_meters!", AutolockVehicles_LogLevel.CRITICAL);
+			return;
+		}
+
 		player.m_AutolockVehicles_LastUnlockedVehicle = car;
 		car.m_AutolockVehicles_LastPlayerUnlocked = player;
-
-		if(!m_Settings.enable_proximity_autolock) return;
 
 		RemoveAutolockTimer(car, "StartProximityWatcher");
 
 		string networkId = AutolockVehicles_Helper.GetNetworkID(car);
 
-		Param2<string, int> carParam = new Param2<string, int>(networkId, m_Settings.proximity_lock_distance_meters);
+		Param3<string, int, int> carParam = new Param3<string, int, int>(networkId, m_Settings.proximity_lock_distance_meters, m_Settings.proximity_unlock_distance_meters);
 		GetGame().RPCSingleParam(player, AutolockVehicles_RPC.START_PROXIMITY, carParam, true, player.GetIdentity());
 	}
 
@@ -302,19 +308,28 @@ class AutolockVehicles_App
 
 		if(keyMod.GetVehicleState(car) == AutolockVehicles_State.UNASSIGNED)
 		{
-			m_Logger.Log("Car doesn't even have a lock/key assigned, not locking");
+			m_Logger.Log("Car doesn't even have a lock/key assigned, not locking", AutolockVehicles_LogLevel.NOTICE);
 			return;
 		}
 
 		if(keyMod.GetVehicleState(car) == AutolockVehicles_State.LOCKED)
 		{
-			m_Logger.Log("Car already locked, not locking");
+			m_Logger.Log("Car already locked, not locking", AutolockVehicles_LogLevel.NOTICE);
 			return;
 		}
 
 		if(m_Settings.lock_only_when_all_doors_are_closed && !AreAllDoorsClosed(car))
 		{
-			m_Logger.Log("lock_only_when_all_doors_are_closed set, but not all doors are closed, not locking");
+			m_Logger.Log("lock_only_when_all_doors_are_closed set, but not all doors are closed, not locking", AutolockVehicles_LogLevel.NOTICE);
+			return;
+		}
+
+		int passengerCount = AutolockVehicles_Helper.GetPassengerCount(car);
+		m_Logger.Log("passenger count is " + passengerCount, AutolockVehicles_LogLevel.NOTICE);
+
+		if(m_Settings.lock_only_when_no_players_inside && passengerCount)
+		{
+			m_Logger.Log("lock_only_when_no_players_inside set, but passenger count is " + passengerCount, AutolockVehicles_LogLevel.NOTICE);
 			return;
 		}
 

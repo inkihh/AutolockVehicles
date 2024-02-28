@@ -28,7 +28,7 @@ modded class MissionGameplay
 			player.RPCSingleParam(AutolockVehicles_RPC.LOCK_PROXIMITY, null, true);
 		}
 
-		if(distanceBetweenOwnerAndVehicle < player.m_AutolockVehicles_proximity_lock_distance_meters && wasProximityLocked)
+		if(distanceBetweenOwnerAndVehicle < player.m_AutolockVehicles_proximity_unlock_distance_meters && wasProximityLocked)
 		{
 			car.m_AutolockVehicles_WasProximityLocked = false;
 		   

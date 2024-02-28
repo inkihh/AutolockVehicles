@@ -1,0 +1,25 @@
+ @echo off
+setlocal
+
+echo SETTING ENVIRONEMT
+
+echo Fill your values below and then comment this line and uncomment the following exit
+exit
+
+set env_serverip=
+set env_serverport=
+set env_password=
+set env_playername=
+set env_modlist=@VPPAdminTools;@Dabs Framework;@CF
+set env_modlistlocal=
+set env_dayzclientpath=
+set env_dayzserverpath=
+set env_buildpath=
+set env_mission=
+set env_keypath=
+set env_clientprofile=
+set env_serverprofile=
+set env_serverconfig=
+set env_pboprojectpath=
+set env_makepbopath=
+set env_signtoolpath=

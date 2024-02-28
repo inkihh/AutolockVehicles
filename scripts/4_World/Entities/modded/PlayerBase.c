@@ -5,7 +5,9 @@ modded class PlayerBase extends ManBase
 	#endif
 
 	CarScript m_AutolockVehicles_LastUnlockedVehicle;
+
 	int m_AutolockVehicles_proximity_lock_distance_meters;
+	int m_AutolockVehicles_proximity_unlock_distance_meters;
 
 	#ifdef SERVER
 		override void OnDisconnect()
@@ -43,11 +45,12 @@ modded class PlayerBase extends ManBase
 			{
 				if(!GetGame().IsClient()) return;
 
-				Param2<string, int> carParam;
+				Param3<string, int, int> carParam;
 				if (!ctx.Read(carParam)) return;
 
 				string persistentId = carParam.param1;
 				m_AutolockVehicles_proximity_lock_distance_meters = carParam.param2;
+				m_AutolockVehicles_proximity_unlock_distance_meters = carParam.param3;
 				
 				array<Object> objects_around = new array<Object>;
 				GetGame().GetObjectsAtPosition(GetPosition(), 10, objects_around, NULL);
@@ -74,7 +77,13 @@ modded class PlayerBase extends ManBase
 			{
 				if(!GetGame().IsServer()) return;
 
-				AutolockVehicles_App.GetInstance().m_Logger.Log("[AutolockVehicles] AutolockVehicles_RPC.LOCK_PROXIMITY");
+				AutolockVehicles_App.GetInstance().m_Logger.Log("[PlayerBase.OnRPC] AutolockVehicles_RPC.LOCK_PROXIMITY");
+
+				if(!AutolockVehicles_App.GetInstance().m_Settings.enable_proximity_autolock)
+				{
+					AutolockVehicles_App.GetInstance().m_Logger.Log("[PlayerBase.OnRPC] enable_proximity_autolock not set, exiting");
+					return;
+				}
 
 				player = PlayerBase.Cast(sender.GetPlayer());
 				if(!player) return;
@@ -89,7 +98,13 @@ modded class PlayerBase extends ManBase
 			{
 				if(!GetGame().IsServer()) return;
 
-				AutolockVehicles_App.GetInstance().m_Logger.Log("[AutolockVehicles] AutolockVehicles_RPC.UNLOCK_PROXIMITY");
+				AutolockVehicles_App.GetInstance().m_Logger.Log("[PlayerBase.OnRPC] AutolockVehicles_RPC.UNLOCK_PROXIMITY");
+
+				if(!AutolockVehicles_App.GetInstance().m_Settings.enable_proximity_autounlock)
+				{
+					AutolockVehicles_App.GetInstance().m_Logger.Log("[PlayerBase.OnRPC] enable_proximity_autounlock not set, exiting");
+					return;
+				}
 
 				player = PlayerBase.Cast(sender.GetPlayer());
 				if(!player) return;
