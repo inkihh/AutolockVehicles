@@ -1,30 +1,36 @@
  @echo off
 setlocal
 
-set version=0.0.1
-set modbase=P:\inkihh\
-set modpath=
-set modname=AutolockVehicles
-set serverip=192.168.178.96
-set serverport=2302
-set password=inkihh
-set playername=inkihh
-::set modlist=@MuchCarKey;@VPPAdminTools;@Dabs Framework;@CF
-::set modlist=@TraderPlus;@VPPAdminTools;@Dabs Framework;@CF
-set modlist=@Trader;@VPPAdminTools;@Dabs Framework;@CF
-::set modlist=@DayZ-Expansion-Bundle;@DayZ-Expansion-Core;@DayZ-Expansion-Licensed;@VPPAdminTools;@Dabs Framework;@CF
+if not exist .\environment.bat (
+	echo No environment.bat found! Forgot to copy environment.bat.orig to environment.bat?
+	exit
+)
+
+call .\environment.bat
+
+set version=%env_version%
+set modbase=%env_modbase%
+set modpath=%env_modpath%
+set modname=%env_modname%
+set serverip=%env_serverip%
+set serverport=%env_serverport%
+set password=%env_password%
+set playername=%env_playername%
+set modlist=%env_modlist%
+set servermod=%env_servermod%
 set srcpath=%modbase%%modpath%%modname%
-set dayzclientpath=C:\Program Files (x86)\Steam\steamapps\common\DayZ
-set dayzserverpath=C:\Program Files (x86)\Steam\steamapps\common\DayZServer
-set buildpath=P:\mods\local
-set mission=dayzOffline.chernarusplus
-set keypath=C:\Users\ingma\OneDrive\Documents\Github\dayztools\keys\inkihh\inkihh
-set clientprofile=P:\mods\profiles\_dev\%mission%\client
-set serverprofile=P:\mods\profiles\_dev\%mission%\server
-set serverconfig=P:\mods\config\%mission%.dev.cfg
-set pboprojectpath=C:\Program Files (x86)\Mikero\DePboTools\bin\PboProject.exe
-set makepbopath=C:\Program Files (x86)\Mikero\DePboTools\bin\MakePbo.exe
-set signtoolpath=C:\Program Files (x86)\Steam\steamapps\common\DayZ Tools\Bin\DsUtils\DSsignfile.exe
+set dayzclientpath=%env_dayzclientpath%
+set dayzserverpath=%env_dayzserverpath%
+set serverparams=%env_serverparams%
+set buildpath=%env_buildpath%
+set mission=%env_mission%
+set keypath=%env_keypath%
+set clientprofile=%env_clientprofile%
+set serverprofile=%env_serverprofile%
+set serverconfig=%env_serverconfig%
+set pboprojectpath=%env_pboprojectpath%
+set makepbopath=%env_makepbopath%
+set signtoolpath=%env_signtoolpath%
 
 set dowipe=0
 
@@ -32,7 +38,7 @@ for /f "tokens=*" %%i in ('node .\modpath.js "%modlist%"') do set fullmodlist=%%
 
 ::goto :end
 
-set fullmodlist=%fullmodlist%;P:\mods\local\@LBmaster;P:\mods\local\@AutolockVehicles
+set fullmodlist=%fullmodlist%%env_modlistlocal%
 
 ::goto :nokill
 
@@ -149,23 +155,9 @@ echo .
 echo STARTING THE SERVER
 echo .
 cd /d "%dayzserverpath%"
-start "DayZServer" ".\DayZServer_x64.exe" /high "-port=%serverport%" "-dologs" "-netLog" "-adminlog" "-config=%serverconfig%" "-profiles=%serverprofile%"  "-scriptDebug=true" "-scrAllowFileWrite" "-equalmodrequired" "-mod=%fullmodlist%" "-servermod=P:\mods\serverside"
+start "DayZServer" ".\DayZServer_x64.exe" %serverparams% "-port=%serverport%" "-config=%serverconfig%" "-profiles=%serverprofile%"  "-mod=%fullmodlist%" "-servermod=%servermod%"
 ::goto :end
-::%buildpath%\@%modpath%%modname%
-::"-servermod=P:\mods\serverside"
-::"-servermod=%buildpath%\@%modpath%%modname%"
-::"-mod=%fullmodlist%" 
 
-goto :afterdzsalauncher
-
-echo -------------------------------------------------------
-echo .
-echo STARTING DZSALModServer
-echo .
-cd /d "%dayzserverpath%"
-start "DZSALModServer" ".\DZSALModServer.exe" "-port=%serverport%" "-mod=%fullmodlist%" "-skipserver" "-password=%password%"
-
-:afterdzsalauncher
 ::goto :eof
 
 TIMEOUT 20
@@ -177,13 +169,9 @@ echo .
 echo STARTING THE CLIENT
 echo .
 cd /d "%dayzclientpath%"
-start "DayZClient" ".\DayZ_BE.exe" "-dologs" "-nosplash" "-nopause" "-name=%playername%" "-nobenchmark" "-skipIntro" "-password=%password%" "-profiles=%clientprofile%" "-connect=%serverip%" "-port=%serverport%" "-mod=%fullmodlist%"
-::"-name=inkihh"
+start "DayZClient" ".\DayZ_BE.exe" %clientparams% "-name=%playername%" "-password=%password%" "-profiles=%clientprofile%" "-connect=%serverip%" "-port=%serverport%" "-mod=%fullmodlist%"
 
 :end
-:: @CHANGEME so that cmd goes back
-cd /d C:\Users\ingma\OneDrive\Documents\Github\dayztools\build
-
 GOTO :EOF
 
 :GetUnixTime
