@@ -6,7 +6,7 @@ If you like this mod, please consider donating!
 
 [h2]Purpose[/h2]
 
-This mod automatically locks vehicles under certain conditions. It's compatible with the four main vehicle locking mechanisms:
+This mod automatically locks vehicles under certain conditions. Compatible with the four main vehicle locking mods:
 [list]
     [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2049002856]MuchCarKey[/url]
     [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2458896948]TraderPlus's CarLock[/url]
@@ -16,7 +16,7 @@ This mod automatically locks vehicles under certain conditions. It's compatible 
 
 [h2]Description[/h2]
 
-There are a few situations when it can be practical that vehicles automatically get locked. For these situations, the mod can be configured so that it fits the specific server.
+There are some situations when it can be practical that vehicles automatically get locked:
 [list]
     [*]Server crashes
     [*]Players missing restarts
@@ -31,24 +31,22 @@ At first install, a configuration file with these default values will be created
 
 [code]
 {
-    "debug_log_level": 1,
-    "use_key_mod": 0,
-    "enable_proximity_autolock": 0,
-    "enable_proximity_autounlock": 0,
-    "enable_startup_autolock_timer": 0,
-    "enable_disconnect_autolock_timer": 0,
-    "enable_close_doors_on_autolock": 0,
-    "enable_engine_off_on_autolock": 0,
-    "lock_only_when_all_doors_are_closed": 1,
+	"debug_log_level": 1,
+	"use_key_mod": 0,
+	"enable_proximity_autolock": 0,
+	"enable_proximity_autounlock": 0,
+	"enable_startup_autolock_timer": 0,
+	"enable_disconnect_autolock_timer": 0,
+	"enable_close_doors_on_autolock": 0,
+	"enable_engine_off_on_autolock": 0,
+	"lock_only_when_all_doors_are_closed": 1,
 	"lock_only_when_no_players_inside": 0,
-    "autolock_delay_startup_minutes": 2,
-    "autolock_delay_player_disconnect_minutes": 1,
-    "proximity_lock_distance_meters": 5,
-    "proximity_unlock_distance_meters": 2
+	"autolock_delay_startup_minutes": 2,
+	"autolock_delay_player_disconnect_minutes": 1,
+	"proximity_lock_distance_meters": 5,
+	"proximity_unlock_distance_meters": 2
 }
 [/code]
-
-Ideally, you test and configure the mod on a test server, so that at the first time you start your live server with it, you can already have the perfectly configured file in place.
 
 [h3]debug_log_level[/h3]
 This setting can be used to control the level of verbosity the mod writes to the log with ([i]$profile:AutolockVerhicles.log[/i]). 1 means only display critical errors, while 5 makes it very chatty - only use 5 to find possible reasons for malfunction, aka debugging, or on your test server.
@@ -132,7 +130,7 @@ Thanks to my "family" at FOG FamilyOfGamers, without their support I wouldn't ha
 
 Special thanks to the [url=https://discord.gg/enfusionmodders]Enfusion Modders Discord[/url] - without the constant help from these guys, I would have gone nowhere. Special thanks to Wardog, Tree, The Crimson Zamboni, Varyel, ◣▲▼▲, TrueDolphin, aff3nbart, Dmitri, LieutenantMaster and Helkhiana.
 
-Extra special thanks to [i]AVcrazy21[/i] for designing this awesome steam workshop page icon, despite my constant whining for changes <3
+Extra special thanks to [i]AVcrazy21[/i] for designing this awesome steam workshop page icon!
 
 [h2]Legalese[/h2]
 [list]
