@@ -13,7 +13,7 @@ class AutolockVehicles_Settings
 	int autolock_delay_startup_minutes = 2;
 	int autolock_delay_player_disconnect_minutes = 1;
 	int proximity_lock_distance_meters = 5;
-	int proximity_unlock_distance_meters = 1;
+	int proximity_unlock_distance_meters = 2;
 	
 	[NonSerialized()]
 	private bool m_IsLoaded;

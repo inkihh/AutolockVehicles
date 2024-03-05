@@ -1,0 +1,16 @@
+[h2]Service Announcement[/h2]
+
+I was made aware (thanks dan68rs) of the fact that the default value of proximity_unlock_distance_meters is 1, although in the documentation I was advising to not have a value lower than 2, because otherwise the unlock proximity trigger may not trigger.
+
+If you were having trouble getting the proximity autolock feature to work, please check the value of this settings parameter in the config file $profile:AutolockVehicles/AutolockVehicles.json
+
+[h2]Fixed[/h2]
+[list]
+    [*]proximity_unlock_distance_meters had a default value of 1, although I was advising to not have a value lower than 2...
+    [*]Badly coded modded vehicles would cause a null pointer exception
+[/list]
+
+[h2]Added/Changed[/h2]
+[list]
+    [*]Added an API to use your own logging (see Github)
+[/list]
