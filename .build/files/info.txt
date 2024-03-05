@@ -4,7 +4,7 @@ If you like this mod, please consider donating!
 
 [url=https://paypal.me/ingmarheinrich][img]https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/160px-PayPal.svg.png[/img][/url]
 
-[h2]Purpose[/h2]
+[h2]Description[/h2]
 
 This mod automatically locks vehicles under certain conditions. Compatible with the four main vehicle locking mods:
 [list]
@@ -13,8 +13,6 @@ This mod automatically locks vehicles under certain conditions. Compatible with 
     [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=1590841260]Trader[/url]
     [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2291785437]Expansion Vehicles[/url]
 [/list]
-
-[h2]Description[/h2]
 
 There are some situations when it can be practical that vehicles automatically get locked:
 [list]
@@ -49,12 +47,10 @@ At first install, a configuration file with these default values will be created
 [/code]
 
 [h3]debug_log_level[/h3]
-This setting can be used to control the level of verbosity the mod writes to the log with ([i]$profile:AutolockVerhicles.log[/i]). 1 means only display critical errors, while 5 makes it very chatty - only use 5 to find possible reasons for malfunction, aka debugging, or on your test server.
-
-Currently, only log levels 1 and 5 are used. In the future, the mod's output will be more fine tuned, so you can get a certain level of information on your live server without spamming the log file.
+Amount of log output to [i]$profile:AutolockVerhicles.log[/i]. 1 means only display critical errors, while 5 makes it very chatty. On your live server, always have it on 1.
 
 [h3]use_key_mod[/h3]
-This determines the vehicle locking mechanism you want to use. Of course, the respective mod has to be installed and active.
+The vehicle locking mod you want to use, which has to be installed and active.
 
 [table]
     [tr]
@@ -94,11 +90,11 @@ This feature will try to lock a vehicle when a player disconnects. It will only 
 [h3]enable_proximity_autolock[/h3]
 This works like handsfree locking in real life: If a player unlocks a vehicle and then later moves farther away from it than defined by [i]proximity_lock_distance_meters[/i], the mod will try to lock it. Again, this only works if they were the last player to unlock it. If they enter the proximity again, it will be tried to unlock it, with the same checks as locking.
 
-The constant distance measuring happens in the player's client, so it won't affect the server's performance.
+The constant distance measuring happens in the player's client, so it won't affect the server's performance. [b]It does not require the player to have the key with them.[/b]
 
 [h3]enable_proximity_autounlock[/h3]
 
-Same as above, but unlock. Notice that different proximities can be configured for lock or unlock.
+Same as above, but unlock. Notice that different proximities can be configured for lock or unlock. Never have proximity_lock_distance_meters less than 2, or it may not register.
 
 [h3]lock_only_when_all_doors_are_closed[/h3]
 Some locking mechanisms behave in an unexpoected way if the doors are being programmatically locked while one or more doors are open. With this setting, you can determine that autolocking will only happen if all doors are closed, including the trunk.
@@ -120,7 +116,7 @@ You also have hook into the key mod's locking action to start the proximity proc
 
 [h2]Help[/h2]
 
-You can find me on the FOG FamilyOfGamers Discord or the Enfusion Modders Discord (see below in the Credits), or DM me on Discord (inkihh).
+You can find me on the Enfusion Modders Discord (see below in the Credits), or DM (inkihh).
 
 The code is public on [url=https://github.com/inkihh/DZAutolockVehicles]Github[/url], where you can create an [url=https://github.com/inkihh/DZAutolockVehicles/issues]issue[/url] or look at the [url=https://github.com/users/inkihh/projects/2]project board[/url]. Feature ideas welcome!
 
@@ -134,7 +130,7 @@ Extra special thanks to [i]AVcrazy21[/i] for designing this awesome steam worksh
 
 [h2]Legalese[/h2]
 [list]
-    [*]The mod may NOT be repacked, aka used in a mod pack or server pack. Don't ask.
+    [*]The mod may NOT be repacked, aka used in a mod pack or server pack
     [*]The mod may be used on monetized servers, as long as Bohemia's monetization guidelines are followed
     [*]The mod may only be uploaded to the Steam Workshop under my account name (inkihh)
 [/list]

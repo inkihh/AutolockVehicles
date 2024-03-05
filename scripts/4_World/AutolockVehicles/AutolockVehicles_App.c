@@ -254,9 +254,10 @@ class AutolockVehicles_App
 
 		foreach(Selection selection : selections)
 		{
-			if(selection.GetName().Substring(0, 6) != "doors_") continue;
+			if(selection && selection.GetName() && selection.GetName().Substring(0, 6) != "doors_") continue;
+			if(selection.GetName() == string.Empty) continue;
 			string animSource = car.GetAnimSourceFromSelection(selection.GetName());
-			if(animSource == "") continue;
+			if(animSource == string.Empty) continue;
 			doorAnimSources.Insert(animSource);
 		}
 
@@ -337,7 +338,9 @@ class AutolockVehicles_App
 
 		if(m_Settings.enable_close_doors_on_autolock) CloseAllDoors(car);
 		if(m_Settings.enable_engine_off_on_autolock) car.EngineStop();
+
 		keyMod.LockVehicle(car);
+		AutolockVehicles_API.GetInstance().OnAutoLock(car);
 	}
 
 	void UnlockVehicle(CarScript car)
@@ -372,5 +375,6 @@ class AutolockVehicles_App
 		m_Logger.Log("Unlocking vehicle");
 
 		keyMod.UnlockVehicle(car);
+		AutolockVehicles_API.GetInstance().OnAutoUnlock(car);
 	}
 }
