@@ -58,13 +58,13 @@ class AutolockVehicles_App
 
 	void AutolockVehicles_App()
 	{
+		s_Instance = this;
+
 		m_Logger = new AutolockVehicles_Logger(m_AppName);
 		m_Settings = new AutolockVehicles_Settings(m_AppName);
 		
 		m_Timers = new map<int, ref Timer>;
 		m_KeyMods = new map<string, ref AutolockVehicles_KeyModBase>();
-
-		s_Instance = this;
 
 		AddKeyMod("CUSTOM", new AutolockVehicles_Custom());
 
@@ -254,10 +254,15 @@ class AutolockVehicles_App
 
 		foreach(Selection selection : selections)
 		{
-			if(selection && selection.GetName() && selection.GetName().Substring(0, 6) != "doors_") continue;
+			if(!selection) continue;
+			if(!selection.GetName()) continue;
 			if(selection.GetName() == string.Empty) continue;
+			if(selection.GetName().Length() < 6) continue;
+			if(selection.GetName().Substring(0, 6) != "doors_") continue;
+
 			string animSource = car.GetAnimSourceFromSelection(selection.GetName());
-			if(animSource == string.Empty) continue;
+			if(!animSource || animSource == string.Empty) continue;
+
 			doorAnimSources.Insert(animSource);
 		}
 
