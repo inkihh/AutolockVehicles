@@ -110,15 +110,11 @@ If set to 1, the mod will check if passengers are in the vehicle, right before l
 These two settings determine if the mod should automatically shut down the vehicle's engine, or close its doors, on autolock. Please note that if [i]lock_only_when_all_doors_are_closed[/i] is set, the doors won't get automatically closed.
 
 [h2]Custom key mod[/h2]
-If you want to use a vehicle locking mechanism that isn't supported by this mod, you can extend [i]GetVehicleState[/i] and [i]LockVehicle[/i] of the class [url=https://github.com/inkihh/DZAutolockVehicles/blob/main/scripts/4_World/classes/KeyMods/KeyModCustom.c]AutolockVehicles_Custom[/url]. See the [url=https://github.com/inkihh/DZAutolockVehicles/tree/main/scripts/4_World/classes/KeyMods/Mods]existing key mods[/url] for reference.
-
-You also have hook into the key mod's locking action to start the proximity process. Also, see the [url=https://github.com/inkihh/DZAutolockVehicles/tree/main/scripts/4_World/classes/KeyMods/Mods]existing key mods[/url] for reference.
+If you want to use a vehicle locking mechanism that isn't supported by this mod, you can extend [i]GetVehicleState[/i] and [i]LockVehicle[/i] of the class [i]AutolockVehicles_Custom[/i]. See the existing key mods for reference. You also have hook into the key mod's unlocking action to start the proximity process. Also, see the existing key mods for reference.
 
 [h2]Help[/h2]
 
 You can find me on the Enfusion Modders Discord (see below in the Credits), or DM (inkihh).
-
-The code is public on [url=https://github.com/inkihh/DZAutolockVehicles]Github[/url], where you can create an [url=https://github.com/inkihh/DZAutolockVehicles/issues]issue[/url] or look at the [url=https://github.com/users/inkihh/projects/2]project board[/url]. Feature ideas welcome!
 
 [h2]Credits[/h2]
 
