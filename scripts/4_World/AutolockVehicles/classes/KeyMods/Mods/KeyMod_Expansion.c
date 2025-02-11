@@ -10,7 +10,7 @@ class AutolockVehicles_Expansion : AutolockVehicles_KeyModBase
 		if(!car) return AutolockVehicles_State.ERROR;
 
 		if(!car.GetExpansionVehicle().HasKey()) return AutolockVehicles_State.UNASSIGNED;
-		if(car.IsLocked()) return AutolockVehicles_State.LOCKED;
+		if(car.GetExpansionVehicle().IsLocked()) return AutolockVehicles_State.LOCKED;
 		return AutolockVehicles_State.UNLOCKED;
 	}
 

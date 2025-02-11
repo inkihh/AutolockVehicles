@@ -1,6 +1,7 @@
 class AutolockVehicles_Settings
 {
 	int debug_log_level = 1;
+	int environment = 1;
 	int use_key_mod = 0;
 	int enable_proximity_autolock = 0;
 	int enable_proximity_autounlock = 0;

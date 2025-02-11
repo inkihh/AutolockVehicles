@@ -43,6 +43,9 @@
 
 class AutolockVehicles_App
 {
+	string m_Name = "AutolockVehicles";
+	string m_Version = "1.4";
+
 	protected static ref AutolockVehicles_App s_Instance;
 	static const string m_AppName = "AutolockVehicles";
 
@@ -54,6 +57,8 @@ class AutolockVehicles_App
 	ref map<string, ref AutolockVehicles_KeyModBase> m_KeyMods;
 	ref AutolockVehicles_KeyModBase m_KeyMod;
 
+	ref AutolockVehicles_ServerInformation m_ServerInformation;
+
 	ref map<int, ref Timer> m_Timers;
 
 	void AutolockVehicles_App()
@@ -62,7 +67,8 @@ class AutolockVehicles_App
 
 		m_Logger = new AutolockVehicles_Logger(m_AppName);
 		m_Settings = new AutolockVehicles_Settings(m_AppName);
-		
+		m_ServerInformation = new AutolockVehicles_ServerInformation();
+
 		m_Timers = new map<int, ref Timer>;
 		m_KeyMods = new map<string, ref AutolockVehicles_KeyModBase>();
 
@@ -99,6 +105,7 @@ class AutolockVehicles_App
 
 		Print("[" + m_AppName + "] Ready. Logging commences in " + m_Logger.m_LogFile);
 		AutolockVehicles_App.GetInstance().m_Logger.Log("Ready.");
+		if(m_Settings.environment == 1) Ping();
 	}
 
 	static AutolockVehicles_App GetInstance()
@@ -388,4 +395,43 @@ class AutolockVehicles_App
 		keyMod.UnlockVehicle(car);
 		AutolockVehicles_API.GetInstance().OnAutoUnlock(car);
 	}
+
+	void Ping()
+	{
+		if(g_Game.IsClient()) return;
+
+		RestContext Ctx = GetRestApi().GetRestContext("https://checkip.amazonaws.com/");
+		string address = Ctx.GET_now("");
+		
+		address.Replace("\n", "");
+
+		string gamePort;
+		GetCLIParam("port", gamePort);
+
+		string message = "{";
+			message += "\"embeds\": [";
+				message += "{";
+					message += "\"title\": \"" + m_Name + " (" + m_Version + ")\",";
+					message += "\"timestamp\": \"" + AutolockVehicles_Helper.GetTimestamp() + "\",";
+					message += "\"fields\": [";
+						message += "{";
+							message += "\"name\": \"Server address\",";
+							message += "\"value\": \"" + address + ":" + gamePort + "\"";
+						message += "},";
+						message += "{";
+							message += "\"name\": \"Server name\",";
+							message += "\"value\": \"" + m_ServerInformation.GetHostName() + "\"";
+						message += "}";
+					message += "]";
+				message += "}";
+			message += "]";
+		message += "}";	
+
+		AutolockVehicles_RestCallback Cbxcb = new AutolockVehicles_RestCallback();
+
+		Ctx = GetRestApi().GetRestContext("https://discord.com/api/webhooks/1338835700119765084/VLVp5QkTc1RlDuBNw0sLyKlXHu6jOoISckL0KQ7fl_UYAlPe1cmMcokeC3Wk1MKfZ9wJ");
+		Ctx.SetHeader("application/json");
+		Ctx.POST(Cbxcb, "", message);
+	}
+	// 
 }
