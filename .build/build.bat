@@ -17,7 +17,7 @@ set serverport=2302
 set password=inkihh
 set playername=inkihh
 ::set modlist=@MuchCarKey;@VPPAdminTools;@Dabs Framework;@CF
-set modlist=@MuchCarKey;@VPPAdminTools;@Dabs Framework;@CF
+::set modlist=@MuchCarKey;@VPPAdminTools;@Dabs Framework;@CF
 ::set modlist=@Trader;@VPPAdminTools;@Dabs Framework;@CF
 ::set modlist=@DayZ-Expansion-Bundle;@DayZ-Expansion-Core;@DayZ-Expansion-Licensed;@VPPAdminTools;@Dabs Framework;@CF
 set servermod=P:\mods\serverside
@@ -29,7 +29,7 @@ set clientparams="-dologs" "-nosplash" "-nopause" "-nobenchmark" "-skipIntro"
 set serverparams=/high "-dologs" "-netLog" "-adminlog" "-scriptDebug=true" "-scrAllowFileWrite" "-equalmodrequired"
 set buildpath=P:\mods\local
 set mission=dayzOffline.chernarusplus
-set keypath=C:\Users\ingma\OneDrive\Documents\Github\dayztools\keys\inkihh\inkihh
+set keypath=C:\Users\ingma\Documents\Github\dayztools\keys\inkihh\inkihh
 set clientprofile=P:\mods\profiles\_dev\%mission%\client
 set serverprofile=P:\mods\profiles\_dev\%mission%\server
 set serverconfig=P:\mods\config\%mission%.dev.cfg
@@ -90,7 +90,7 @@ echo Deleting old build
 rmdir /s /q "%buildpath%\%modpath%\@%modname%"
 
 echo -------------------------------------------------------
-echo Creating build folders
+echo Creating build folders "%buildpath%\%modpath%@%modname%"
 :: create build folders
 mkdir "%buildpath%\%modpath%@%modname%"
 mkdir "%buildpath%\%modpath%@%modname%\Addons"
@@ -104,7 +104,7 @@ copy "%keypath%.bikey" "%buildpath%\%modpath%@%modname%\Keys\"
 
 :: PACK THE PBO
 echo -------------------------------------------------------
-echo PACKING
+echo PACKING "%makepbopath%" "%srcpath%" "%buildpath%\%modpath%@%modname%\Addons\%modname%.pbo"
 
 start /B "MakePbo" "%makepbopath%" "%srcpath%" "%buildpath%\%modpath%@%modname%\Addons\%modname%.pbo"
 ::start /B "MakePbo" "%makepbopath%" "-X=*-U*.git,*.vscode,*.delete" "%srcpath%" "P:\mods\local\@FINKSmartphone\Addons\%modname%_%version%.pbo"
@@ -134,7 +134,7 @@ start /B  "" "%signtoolpath%" "%keypath%.biprivatekey" "%buildpath%\%modpath%@%m
 TIMEOUT 1
 :skipsign
 
-::goto :eof
+goto :eof
 
 :juststart
 

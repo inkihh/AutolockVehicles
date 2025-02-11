@@ -233,6 +233,12 @@ class AutolockVehicles_App
 			return;
 		}
 	  
+	  	if(!player.m_AutolockVehicles_LastUnlockedVehicle.m_AutolockVehicles_LastPlayerUnlocked)
+		{
+			m_Logger.Log("Player doesn't have a last unlocked vehicle, exiting");
+			return;
+		}
+
 	  	if(player.m_AutolockVehicles_LastUnlockedVehicle.m_AutolockVehicles_LastPlayerUnlocked.GetID() != player.GetID())
 		{
 			m_Logger.Log("Vehicle wasn't unlocked last by player, exiting");

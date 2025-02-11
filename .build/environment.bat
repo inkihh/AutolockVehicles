@@ -20,7 +20,7 @@ set env_clientparams="-dologs" "-nosplash" "-nopause" "-nobenchmark" "-skipIntro
 set env_serverparams=/high "-dologs" "-netLog" "-adminlog" "-scriptDebug=true" "-scrAllowFileWrite" "-equalmodrequired"
 set env_buildpath=P:\mods\local
 set env_mission=dayzOffline.chernarusplus
-set env_keypath=C:\Users\ingma\OneDrive\Documents\Github\dayztools\keys\inkihh\inkihh
+set env_keypath=C:\Users\ingma\Documents\Github\dayztools\keys\inkihh
 set env_clientprofile=P:\mods\profiles\_dev\%env_mission%\client
 set env_serverprofile=P:\mods\profiles\_dev\%env_mission%\server
 set env_serverconfig=P:\mods\config\%env_mission%.dev.cfg
