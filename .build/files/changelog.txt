@@ -1,3 +1,0 @@
-[h2]Fixed[/h2]
-
-There were still some NUll Pointer Exceptions with badly coded cars. I hope this puts an end to it. I am so sorry for all the updates.

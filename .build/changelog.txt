@@ -1,1 +1,0 @@
-* Possible null pointer exception on player disconnect
