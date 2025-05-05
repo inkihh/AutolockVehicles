@@ -67,7 +67,7 @@ class AutolockVehicles_ServerInformation
 			varValue = varValue.SubstringUtf8(0, varValue.Length() - 1 );
 			varValue.TrimInPlace();
 
-			m_ConfigVariables.Set(varName, varValue)
+			m_ConfigVariables.Set(varName, varValue);
 
 			AutolockVehicles_App.GetInstance().m_Logger.Log("varName:" + varName + " varValue:" + varValue);
 			
